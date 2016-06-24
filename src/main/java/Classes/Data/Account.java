@@ -24,9 +24,11 @@ public class Account implements Serializable {
     @Column(name = "balance")
     @Expose
     private double balance;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "owner", nullable = false)
     private User owner;
+
+    public Account() {}
 
     public Account(String description, double balance) {
         this.description = description;

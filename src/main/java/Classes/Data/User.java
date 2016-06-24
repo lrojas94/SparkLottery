@@ -18,11 +18,16 @@ import com.google.gson.annotations.Expose;
         @NamedQuery(
                 name = "User.findUserByUsername",
                 query = "SELECT u FROM User u WHERE u.username = :username"
+        ),
+        @NamedQuery(
+                name = "User.findUserByUsernameAndPassword",
+                query = "SELECT u FROM User u WHERE u.username = :username AND u.password = :password"
         )
 })
 
 public class User implements Serializable {
     public static String QUERY_NAME_FIND_BY_USERNAME = "User.findUserByUsername";
+    public static String QUERY_NAME_FIND_BY_USERNAME_AND_PASSWORD = "User.findUserByUsernameAndPassword";
 
     @Id
     @GeneratedValue
@@ -40,10 +45,11 @@ public class User implements Serializable {
     @Column(name = "username")
     @Expose
     private String username;
+    @Column(name = "password")
+    private String password;
     @Column(name = "is_administrator")
-    @Expose
     private Boolean isAdmin;
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
     private Account account;
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Ticket> tickets = new HashSet<>();
@@ -92,6 +98,14 @@ public class User implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Boolean getAdmin() {
