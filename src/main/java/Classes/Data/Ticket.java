@@ -23,28 +23,29 @@ public class Ticket implements Serializable {
     @Expose
     private Date emitDate;
     @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     @Expose
-    private String type;
+    private Game.GameType type;
     @Column(name = "bet_amount")
     @Expose
     private double betAmount; // Should it be double type?
-    @Column(name = "is_winner")
-    @Expose
-    private Bool isWinner;
     @ManyToOne
     @JoinColumn(name = "owner", nullable = false)
     @Expose
     private User owner;
+    @OneToOne(mappedBy = "winningTicket")
+    private Game winnerIn = null;
+    @ManyToOne
+    private Game issuedIn;
 
     // Missing Number Relation, should be added
 
     public Ticket() {}
 
-    public Ticket(Date emitDate, String type, int betAmount, Bool isWinner) {
+    public Ticket(Date emitDate, Game.GameType type, int betAmount, Bool isWinner) {
         this.emitDate = emitDate;
         this.type = type;
         this.betAmount = betAmount;
-        this.isWinner = isWinner;
     }
 
     public int getId() {
@@ -59,11 +60,11 @@ public class Ticket implements Serializable {
         this.emitDate = emitDate;
     }
 
-    public String getType() {
+    public Game.GameType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Game.GameType type) {
         this.type = type;
     }
 
@@ -75,14 +76,6 @@ public class Ticket implements Serializable {
         this.betAmount = betAmount;
     }
 
-    public Bool getIsWinner() {
-        return isWinner;
-    }
-
-    public void setIsWinner(Bool isWinner) {
-        this.isWinner = isWinner;
-    }
-
     public User getOwner() {
         return owner;
     }
@@ -91,4 +84,21 @@ public class Ticket implements Serializable {
         this.owner = owner;
     }
 
+
+    public Game getWinnerIn() {
+        return winnerIn;
+    }
+
+    public void setWinnerIn(Game winnerIn) {
+        this.winnerIn = winnerIn;
+    }
+
+
+    public Game getIssuedIn() {
+        return issuedIn;
+    }
+
+    public void setIssuedIn(Game issuedIn) {
+        this.issuedIn = issuedIn;
+    }
 }

@@ -5,7 +5,7 @@
     <persistence-unit name="org.hibernate.sparklottery.jpa" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>Classes.Data.Account</class>
-        <class>Classes.Data.Loto</class>
+        <class>Classes.Data.Game</class>
         <class>Classes.Data.Ticket</class>
         <class>Classes.Data.User</class>
         <properties>

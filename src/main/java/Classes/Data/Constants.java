@@ -10,4 +10,6 @@ public class Constants {
     public static String DB_USER = "sa";
     public static String DB_PASSWORD = "";
     public static String PERSISTENCE_UNIT_NAME = "org.hibernate.sparklottery.jpa";
+    public static double PALE_MULTIPLIER = 1000;
+    public static double LOTO_MULTIPLIER = 1;
 }
