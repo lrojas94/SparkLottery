@@ -8,6 +8,7 @@ import static spark.debug.DebugScreen.enableDebugScreen;
 
 import Classes.Data.User;
 import Classes.PersistenceHandlers.UserHandler;
+import Classes.Routers.Users;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 
@@ -58,6 +59,8 @@ public class Main {
             attributes.put("template_name","index.ftl");
             return new ModelAndView(attributes, "header_footer_layout.ftl");
         }, new FreeMarkerEngine());
+
+        Users.Routes(); //Creates user routes
 
     }
 

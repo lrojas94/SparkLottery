@@ -8,16 +8,26 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand topnav" href="#">SparkLoto!</a>
+            <a class="navbar-brand topnav" href="/">SparkLoto</a>
         </div>
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+            <#if !user??>
                 <li>
-                    <#if !user??>
-                        <a href="#about">Registrate y Gana</a>
-                    </#if>
+                    <a href="/user/create">Registrate</a>
                 </li>
+                <li>
+                    <a href="/user/login">Inicia Sesion</a>
+                </li>
+            <#else >
+                <li class="disabled">
+                    <a href="#">${user}</a>
+                </li>
+                <li>
+                    <a href="/user/${user.getId()}">Perfil</a>
+                </li>
+            </#if>
                 <li>
                     <a href="#services">Ganadores</a>
                 </li>

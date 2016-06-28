@@ -20,10 +20,10 @@ public class Account implements Serializable {
     private int id;
     @Column(name = "description")
     @Expose
-    private String description;
+    private String description = "";
     @Column(name = "balance")
     @Expose
-    private double balance;
+    private double balance = 0;
     @OneToOne
     @JoinColumn(name = "owner", nullable = false)
     private User owner;

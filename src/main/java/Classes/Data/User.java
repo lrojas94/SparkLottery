@@ -35,20 +35,20 @@ public class User implements Serializable {
     private int id;
     @Column(name = "first_name")
     @Expose
-    private String firstName;
+    private String firstName = "";
     @Column(name = "last_name")
     @Expose
-    private String lastName;
+    private String lastName = "";
     @Column(name = "email")
     @Expose
-    private String email;
-    @Column(name = "username")
+    private String email = "";
+    @Column(name = "username", nullable = false)
     @Expose
     private String username;
-    @Column(name = "password")
+    @Column(name = "password",nullable = false)
     private String password;
     @Column(name = "is_administrator")
-    private Boolean isAdmin;
+    private Boolean isAdmin = false;
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
     private Account account;
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)

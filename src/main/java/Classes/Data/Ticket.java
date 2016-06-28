@@ -22,10 +22,6 @@ public class Ticket implements Serializable {
     @Column(name = "emit_date")
     @Expose
     private Date emitDate;
-    @Column(name = "type")
-    @Enumerated(EnumType.STRING)
-    @Expose
-    private Game.GameType type;
     @Column(name = "bet_amount")
     @Expose
     private double betAmount; // Should it be double type?
@@ -42,9 +38,8 @@ public class Ticket implements Serializable {
 
     public Ticket() {}
 
-    public Ticket(Date emitDate, Game.GameType type, int betAmount, Bool isWinner) {
+    public Ticket(Date emitDate, int betAmount, Bool isWinner) {
         this.emitDate = emitDate;
-        this.type = type;
         this.betAmount = betAmount;
     }
 
@@ -58,14 +53,6 @@ public class Ticket implements Serializable {
 
     public void setEmitDate(Date emitDate) {
         this.emitDate = emitDate;
-    }
-
-    public Game.GameType getType() {
-        return type;
-    }
-
-    public void setType(Game.GameType type) {
-        this.type = type;
     }
 
     public double getBetAmount() {

@@ -1,0 +1,39 @@
+footer{
+    background-color: #2c3e50!important;
+    color: white!important;
+}
+
+footer a{
+    color: white!important;
+}
+
+.text-muted{
+    color: #bdc3c7!important;
+}
+
+.btn{
+    border-radius: 0 !important;
+}
+html,
+body {
+    margin:0;
+    padding:0;
+    height:100%;
+}
+#wrapper {
+    padding-top: 51px;
+    min-height:100%;
+    position:relative;
+}
+
+#content {
+    padding-bottom: 120px;
+}
+
+#footer {
+    background:#ffab62;
+    width:100%;
+    position:absolute;
+    bottom:0;
+    left:0;
+}
