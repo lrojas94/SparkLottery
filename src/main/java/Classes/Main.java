@@ -54,7 +54,9 @@ public class Main {
         });
 
         get("/", (request, response) -> {
-            return new ModelAndView(null, "header_footer_layout.ftl");
+            HashMap<String,Object> attributes = request.attribute(MODEL_PARAM);
+            attributes.put("template_name","index.ftl");
+            return new ModelAndView(attributes, "header_footer_layout.ftl");
         }, new FreeMarkerEngine());
 
     }

@@ -5,8 +5,10 @@
     <title>SparkBlog</title>
     <link rel="stylesheet" href="/bower/bootstrap/dist/css/bootstrap.min.css" type="text/css">
     <link rel="stylesheet" href="/bower/font-awesome/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="/css/landing-page.css" type="text/css">
 </head>
 <body>
+<#include 'nav.ftl'/>
 <#if template_name??>
     <#include template_name>
 </#if>
