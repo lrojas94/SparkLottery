@@ -8,21 +8,28 @@ import static spark.debug.DebugScreen.enableDebugScreen;
 
 import Classes.Data.User;
 import Classes.PersistenceHandlers.UserHandler;
+import Classes.Routers.Winners;
 import Classes.Routers.Users;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
     public final static String MODEL_PARAM = "model";
     public static final String BASE_LAYOUT = "header_footer_layout.ftl";
+    public static File uploadDir = new File("uploads");
 
     public static void main(String[] args) {
 
         staticFiles.location("/public");
+        staticFiles.externalLocation("uploads");
+
         enableDebugScreen();
+
+        uploadDir.mkdir();
 
         before((request, response) -> {
             //Add base model to everything:
@@ -60,7 +67,8 @@ public class Main {
             return new ModelAndView(attributes, "header_footer_layout.ftl");
         }, new FreeMarkerEngine());
 
-        Users.Routes(); //Creates user routes
+        Winners.Routes(); // Creates Winners Routes
+        Users.Routes(); // Creates Users Routes
 
     }
 

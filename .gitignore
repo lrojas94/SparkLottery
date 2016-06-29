@@ -1,6 +1,7 @@
 src/main/resources/public/bower
 build
 .DS_Store
+uploads
 
 # Created by https://www.gitignore.io/api/intellij,java,gradle,bower
 

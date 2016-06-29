@@ -58,6 +58,8 @@ public class User implements Serializable {
     private Account account;
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Ticket> tickets = new HashSet<>();
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
+    private Set<Winner> wins = new HashSet<>();
 
     public User() {}
 
@@ -135,6 +137,14 @@ public class User implements Serializable {
 
     public void setTickets(Set<Ticket> tickets) {
         this.tickets = tickets;
+    }
+
+    public Set<Winner> getWins() {
+        return wins;
+    }
+
+    public void setWins(Set<Winner> wins) {
+        this.wins = wins;
     }
 
     @Override

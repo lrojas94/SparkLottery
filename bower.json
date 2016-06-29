@@ -23,6 +23,7 @@
   "dependencies": {
     "jquery": "^2.2.4",
     "font-awesome": "^4.6.3",
-    "bootstrap": "^3.3.6"
+    "bootstrap": "^3.3.6",
+    "bootstrap-fileinput": "^4.3.2"
   }
 }
