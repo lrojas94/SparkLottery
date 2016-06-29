@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * Created by MEUrena on 6/23/16.
@@ -27,6 +28,8 @@ public class Account implements Serializable {
     @OneToOne
     @JoinColumn(name = "owner", nullable = false)
     private User owner;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
+    private Set<Transaction> transactions;
 
     public Account() {}
 
@@ -48,7 +51,7 @@ public class Account implements Serializable {
     }
 
     public double getBalance() {
-        return balance;
+        return transactions.stream().mapToDouble(Transaction::getAmmount).sum();
     }
 
     public void setBalance(double balance) {
@@ -63,4 +66,12 @@ public class Account implements Serializable {
         this.owner = owner;
     }
 
+
+    public Set<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(Set<Transaction> transactions) {
+        this.transactions = transactions;
+    }
 }

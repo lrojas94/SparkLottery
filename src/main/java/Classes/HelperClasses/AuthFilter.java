@@ -3,6 +3,7 @@ package Classes.HelperClasses;
 import Classes.Data.AuthRoles;
 import Classes.Data.User;
 import Classes.Main;
+import Classes.PersistenceHandlers.UserHandler;
 import spark.*;
 
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Set;
 public class AuthFilter extends CustomFilter {
 
     private Set<AuthRoles> roles;
+    private User owner;
 
     public AuthFilter(TemplateEngine templateEngine) { super(templateEngine); }
 
@@ -26,6 +28,8 @@ public class AuthFilter extends CustomFilter {
     @Override
     public void handle(Request request, Response response) throws Exception {
         super.handle(request, response);
+
+        setOwner(request.params("userId"));
         //First, check if logged in:
         User user = request.session().attribute("user");
         Map<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
@@ -50,10 +54,30 @@ public class AuthFilter extends CustomFilter {
                         Spark.halt(401, templateEngine.render(new ModelAndView(attributes, Main.BASE_LAYOUT)));
                     }
                     break;
+                case OWNER:
+                    if(getOwner() == null || (!getOwner().getUsername().equals(user.getUsername()) && !user.getAdmin())){
+                        attributes.put("forbidden_message", "USTED NO ES DUENO DE ESTA CUENTA");
+                        Spark.halt(401, templateEngine.render(new ModelAndView(attributes, Main.BASE_LAYOUT)));
+                    }
                 default:
                     break;
             }
         }
     }
 
+
+    public User getOwner() {
+        return owner;
+    }
+
+    private void setOwner(String id) {
+        try{
+            int userId = Integer.parseInt(id);
+            UserHandler userHandler = UserHandler.getInstance();
+            owner = userHandler.findObjectWithId(userId);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }

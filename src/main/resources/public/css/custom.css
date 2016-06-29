@@ -27,7 +27,7 @@ body {
 }
 
 #content {
-    padding-bottom: 120px;
+    padding-bottom: 200px;
 }
 
 #footer {
@@ -36,4 +36,32 @@ body {
     position:absolute;
     bottom:0;
     left:0;
+}
+
+input,select{
+    border-radius: 0;
+}
+
+.container-fluid{
+    padding: 0;
+    border-radius: 0;
+}
+
+.jumbotron,.panel,.panel-heading {
+    border-radius: 0!important;
+}
+
+#header-small{
+    background-attachment: fixed;
+    background-image: url('./../img/intro-bg.jpg');
+    color: white!important;
+}
+
+.panel-primary{
+    border-color: #777777!important;
+}
+
+.panel-primary .panel-heading{
+    background: #777777;
+    border-color: #777777;
 }

@@ -5,8 +5,13 @@ import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
 import Classes.Data.Account;
+import Classes.Data.AuthRoles;
+import Classes.Data.Transaction;
 import Classes.Data.User;
+import Classes.HelperClasses.AuthFilter;
 import Classes.Main;
+import Classes.PersistenceHandlers.AccountHandler;
+import Classes.PersistenceHandlers.TransactionHandler;
 import Classes.PersistenceHandlers.UserHandler;
 import spark.ModelAndView;
 import spark.TemplateEngine;
@@ -14,6 +19,7 @@ import spark.template.freemarker.FreeMarkerEngine;
 
 import java.awt.image.RescaleOp;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 /**
  * Created by luis on 6/27/16.
@@ -21,6 +27,8 @@ import java.util.Map;
 public class Users {
     public static void Routes(){
         final UserHandler userHandler = UserHandler.getInstance();
+        final TransactionHandler transactionHandler = TransactionHandler.getInstance();
+        final AccountHandler accountHandler = AccountHandler.getInstance();
         //Find admin:
         try{
             User admin = userHandler.findUserByUsername("admin");
@@ -37,8 +45,12 @@ public class Users {
             }
         }
         catch (Exception e){
-
+            e.printStackTrace();
         }
+
+        before("/user/:userId/*",new AuthFilter(new FreeMarkerEngine(),new HashSet<AuthRoles>(){{
+            add(AuthRoles.OWNER);
+        }}));
 
         get("/user/login",(request, response) -> {
            //login form
@@ -129,6 +141,87 @@ public class Users {
             attributes.put("User",user);
             attributes.put("template_name","user/profile.ftl");
             return new ModelAndView(attributes,Main.BASE_LAYOUT);
+        },new FreeMarkerEngine());
+
+        get("/user/:id/addfunds",(request, response) -> {
+            HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
+            try{
+                int id = Integer.parseInt(request.params("id"));
+                User user = userHandler.findObjectWithId(id);
+                attributes.put("User",user);
+
+                attributes.put("template_name","user/addfunds.ftl");
+                return new ModelAndView(attributes,Main.BASE_LAYOUT);
+            }
+            catch (Exception e){
+                response.redirect("/");
+            }
+
+            return null;
+        },new FreeMarkerEngine());
+
+        post("/user/:id/addfunds",(request, response) -> {
+            HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
+            try{
+                int id = Integer.parseInt(request.params("id"));
+                User user = userHandler.findObjectWithId(id);
+
+                double amount = Double.parseDouble(request.queryParams("ammountToAdd"));
+                String creditCard = request.queryParams("creditCard");
+                String month = request.queryParams("month");
+                String year = request.queryParams("year");
+                String cvc = request.queryParams("cvc");
+                String msg = request.queryParams("msg");
+                String cardType = request.queryParams("cctype");
+
+                String error = "";
+                if(amount <= 100){
+                    error += "No se pueden agregar menos de $100.00 pesos.<br/>";
+                }
+                if(creditCard == null || creditCard.equals("")){
+                    error += "La tarjeta de credito no puede estar vacia.<br/>";
+                }
+                if(month == null || month.equals("")){
+                    error += "El Mes no puede estar vacia.<br/>";
+                }
+                if(year == null || year.equals("")){
+                    error += "El anio no puede estar vacio. <br/>";
+                }
+                if(cvc == null || cvc.equals("")){
+                    error += "El cvc no puede estar vacio. <br/>";
+                }
+                if(cardType == null || cardType.equals("")){
+                    error += "El tipo de tarjeta no puede estar vacio. <br/>";
+                }
+
+
+                if(error.equals("")){
+                    Transaction t = new Transaction();
+                    t.setAmmount(amount);
+                    t.setMessage(msg);
+                    t.setMethod(Transaction.Method.CREDITCARD);
+                    t.setDescription("Transferencia con Tarjeta de Credito terminada en: "
+                            + creditCard.substring(creditCard.length() - 4,creditCard.length()));
+                    t.setOwner(user.getAccount());
+                    user.getAccount().getTransactions().add(t);
+                    transactionHandler.insertIntoDatabase(t);
+                    response.redirect("/user/"+user.getId());
+
+                }
+                else{
+
+                    attributes.put("error",error);
+                    attributes.put("User",user);
+                    attributes.put("template_name","user/addfunds.ftl");
+                    return new ModelAndView(attributes,Main.BASE_LAYOUT);
+                }
+
+            }
+            catch (Exception e){
+                response.redirect("/");
+            }
+
+            return null;
         },new FreeMarkerEngine());
 
 

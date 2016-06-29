@@ -1,37 +1,6 @@
 
 
 
-<!-- Header -->
-<a name="about"></a>
-<div class="intro-header">
-    <div class="container">
-
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="intro-message">
-                    <h1>SparkLoto</h1>
-                    <h3>Loteria Automatizada</h3>
-                    <hr class="intro-divider">
-                    <ul class="list-inline intro-social-buttons">
-                        <#if !user??>
-                            <li>
-                                <a href="/user/login" class="btn btn-default btn-lg"><i class="fa fa-user"></i> Inicia Sesion</a>
-                            </li>
-                            <li>
-                                <a href="/user/create" class="btn btn-default btn-lg"><i class="fa fa-check"></i> Registrate</a>
-                            </li>
-                        </#if>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-    </div>
-    <!-- /.container -->
-
-</div>
-<!-- /.intro-header -->
-
 <!-- Page Content -->
 
 <a  name="services"></a>
@@ -94,7 +63,6 @@
                 <img class="img-responsive" src="img/phones.png" alt="">
             </div>
         </div>
-
     </div>
     <!-- /.container -->
 

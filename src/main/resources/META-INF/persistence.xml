@@ -8,6 +8,7 @@
         <class>Classes.Data.Game</class>
         <class>Classes.Data.Ticket</class>
         <class>Classes.Data.User</class>
+        <class>Classes.Data.Transaction</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:h2:tcp://localhost/~/lottery_jpa" />
             <property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />

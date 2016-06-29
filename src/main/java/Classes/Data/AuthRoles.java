@@ -6,5 +6,6 @@ package Classes.Data;
  */
 public enum AuthRoles {
     ADMIN,
-    PLAYER
+    PLAYER,
+    OWNER
 }
