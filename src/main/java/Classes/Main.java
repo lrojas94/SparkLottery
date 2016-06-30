@@ -8,23 +8,30 @@ import static spark.debug.DebugScreen.enableDebugScreen;
 
 import Classes.Data.Ticket;
 import Classes.Data.Transaction;
+import Classes.Data.Constants;
 import Classes.Data.User;
+import Classes.Data.Winner;
 import Classes.PersistenceHandlers.UserHandler;
 import Classes.Routers.Admin;
 import Classes.Routers.Game;
+import Classes.PersistenceHandlers.WinnerHandler;
 import Classes.Routers.Winners;
 import Classes.Routers.Users;
+import com.cloudinary.utils.ObjectUtils;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
+import com.cloudinary.*;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Main {
     public final static String MODEL_PARAM = "model";
     public static final String BASE_LAYOUT = "header_footer_layout.ftl";
-    public static File uploadDir = new File("uploads");
+    public static File uploadDir = new File("./src/main/resources/public/uploads");
+    public static Cloudinary cloudinary = null;
 
 
     public static Transaction createTicketTransaction(Ticket ticket){
@@ -38,6 +45,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
+
+        setupCloudinary();
 
         staticFiles.location("/public");
         staticFiles.externalLocation("uploads");
@@ -79,7 +88,12 @@ public class Main {
         get("/", (request, response) -> {
             HashMap<String,Object> attributes = request.attribute(MODEL_PARAM);
             attributes.put("template_name","index.ftl");
-            return new ModelAndView(attributes, "header_footer_layout.ftl");
+
+            WinnerHandler winnerHandler = WinnerHandler.getInstance();
+            List<Winner> winners = winnerHandler.getAllObjects();
+            attributes.put("winners", winners);
+
+            return new ModelAndView(attributes, BASE_LAYOUT);
         }, new FreeMarkerEngine());
 
         Winners.Routes(); // Creates Winners Routes
@@ -87,6 +101,12 @@ public class Main {
         Admin.Routes(); //create Admin Routes
         Game.Routes();
 
+    }
+
+    private static void setupCloudinary() {
+        cloudinary = new Cloudinary(ObjectUtils.asMap("cloud_name", Constants.CLOUDINARY_CLOUD_NAME,
+                                                    "api_key", Constants.CLOUDINARY_API_KEY,
+                                                    "api_secret", Constants.CLOUDINARY_API_SECRET));
     }
 
 }

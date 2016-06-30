@@ -24,6 +24,8 @@
     "jquery": "^2.2.4",
     "font-awesome": "^4.6.3",
     "bootstrap": "^3.3.6",
-    "bootstrap-fileinput": "^4.3.2"
+    "bootstrap-fileinput": "^4.3.2",
+    "datatables.net": "^1.10.12",
+    "datatables.net-bs": "^1.10.12"
   }
 }

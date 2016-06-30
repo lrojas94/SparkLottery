@@ -12,7 +12,20 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "winners")
+@NamedQueries({
+        @NamedQuery(
+                name = "Winner.findWinnersInDescOrder",
+                query = "SELECT w FROM Winner w ORDER BY w.id DESC"
+        ),
+        @NamedQuery(
+                name = "Winner.count",
+                query = "SELECT count(w) FROM Winner w"
+        )
+})
 public class Winner implements Serializable {
+
+    public static String QUERY_NAME_FIND_WINNERS_IN_DESC_ORDER = "Winner.findWinnersInDescOrder";
+    public static String QUERY_NAME_COUNT_WINNERS = "Winner.count";
 
     @Id
     @GeneratedValue

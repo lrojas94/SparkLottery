@@ -39,7 +39,7 @@
                 </li>
             </#if>
                 <li>
-                    <a href="#services">Ganadores</a>
+                    <a href="/winner/list">Ganadores</a>
                 </li>
                 <li>
                     <a href="#contact">Informacion</a>
