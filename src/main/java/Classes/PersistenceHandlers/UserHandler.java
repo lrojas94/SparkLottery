@@ -4,6 +4,7 @@ import Classes.Data.User;
 import Classes.HelperClasses.DatabaseHandler;
 
 import javax.persistence.EntityManager;
+import java.util.List;
 
 /**
  * Created by MEUrena on 6/24/16.
@@ -42,6 +43,18 @@ public class UserHandler extends DatabaseHandler<User> {
             return (User) em.createNamedQuery(User.QUERY_NAME_FIND_BY_USERNAME)
                     .setParameter("username",username)
                     .getSingleResult();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<User> findTransferableUsers(String username) throws Exception {
+        EntityManager em = getEntityManager();
+        try {
+            return (List<User>) em.createNamedQuery(User.QUERY_NAME_FIND_TRANSFERABLE)
+                    .setParameter("username",username).getResultList();
         } catch (Exception ex) {
             throw ex;
         } finally {

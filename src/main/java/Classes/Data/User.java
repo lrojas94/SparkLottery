@@ -22,12 +22,17 @@ import com.google.gson.annotations.Expose;
         @NamedQuery(
                 name = "User.findUserByUsernameAndPassword",
                 query = "SELECT u FROM User u WHERE u.username = :username AND u.password = :password"
+        ),
+        @NamedQuery(
+                name = "User.findAllUsersToTransferTo",
+                query = "SELECT u from User u WHERE u.username <> :username AND u.username <> 'admin'"
         )
 })
 
 public class User implements Serializable {
     public static String QUERY_NAME_FIND_BY_USERNAME = "User.findUserByUsername";
     public static String QUERY_NAME_FIND_BY_USERNAME_AND_PASSWORD = "User.findUserByUsernameAndPassword";
+    public static String QUERY_NAME_FIND_TRANSFERABLE = "User.findAllUsersToTransferTo";
 
     @Id
     @GeneratedValue

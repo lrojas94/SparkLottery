@@ -23,8 +23,11 @@
                     <div class="col-xs-12">
                         <div class="form-group">
                             <label for="ammountToAdd">Monto a agregar: </label>
-                            <input type="number" class="form-control" name="ammountToAdd" id="ammountToAdd" placeholder="" required>
-                        </div>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="basic-addon1">$</span>
+                                <input type="number" min="0.01" step="0.01" name="ammountToAdd" class="form-control" id="ammountToAdd">
+                            </div>
+                            </div>
                     </div>
 
                     <div class="col-xs-6">

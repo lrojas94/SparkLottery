@@ -51,9 +51,6 @@
                         <input required type="text" class="form-control" name="lastName" id="lastName" placeholder="e.g: Zahran">
                     </div>
                 </div>
-                <col-xs-12>
-                    <textarea name="msg" id="msgBox"  rows="4"></textarea>
-                </col-xs-12>
                 <button type="submit" class="btn btn-info btn-block">Registrarse</button>
             </form>
         </div>

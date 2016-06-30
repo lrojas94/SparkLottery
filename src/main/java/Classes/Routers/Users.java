@@ -48,6 +48,9 @@ public class Users {
             e.printStackTrace();
         }
 
+        before("/user/transferfunds",new AuthFilter(new FreeMarkerEngine(),new HashSet<AuthRoles>(){{
+        }}));
+
         before("/user/:userId/*",new AuthFilter(new FreeMarkerEngine(),new HashSet<AuthRoles>(){{
             add(AuthRoles.OWNER);
         }}));
@@ -135,22 +138,95 @@ public class Users {
             return new ModelAndView(attributes,Main.BASE_LAYOUT);
         },new FreeMarkerEngine());
 
+        get("/user/transferfunds",(request, response) -> {
+            HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
+            User user = request.session().attribute("user");
+            attributes.put("users",userHandler.findTransferableUsers(user.getUsername()));
+            attributes.put("template_name","user/transferfunds.ftl");
+            return new ModelAndView(attributes,Main.BASE_LAYOUT);
+        },new FreeMarkerEngine());
+
+        post("/user/transferfunds",(request, response) -> {
+            HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
+            try{
+                int transferTo = Integer.parseInt(request.queryParams("transferTo"));
+                double ammount = Double.parseDouble(request.queryParams("ammountToAdd"));
+                String msg = request.queryParams("msg");
+                User user = request.session().attribute("user");
+                User userTo = userHandler.findObjectWithId(transferTo);
+                String errors = "";
+
+                if(user.getUsername().equals(userTo.getUsername())){
+                    errors += "No se puede transferir dinero a si mismo.<br/>";
+                }
+
+                if(ammount < 0 || ammount > user.getAccount().getBalance() - 100.00){
+                    errors += "* No puede dejar su cuenta con menos de $100.00 Pesos o transferir menos de $0.00.<br/>";
+                    errors += "Su maxima transferencia es de: $" + (user.getAccount().getBalance()-100.00) + " <br/>";
+                }
+                if(errors.equals("")){
+                    Transaction transferToTrans = new Transaction();
+                    Transaction transferFromTrans = new Transaction();
+                    transferToTrans.setAmmount(ammount);
+                    transferFromTrans.setAmmount(-ammount);
+                    transferToTrans.setMethod(Transaction.Method.USER);
+                    transferFromTrans.setMethod(Transaction.Method.USER);
+                    transferToTrans.setMessage(msg);
+                    transferFromTrans.setMessage(msg);
+                    transferToTrans.setDescription("Transferido desde usuario: " + user + " | " + user.getUsername());
+                    transferFromTrans.setDescription("Transferido a usuario: " + userTo + " | " + userTo.getUsername());
+
+                    transferToTrans.setOwner(userTo.getAccount());
+                    userTo.getAccount().getTransactions().add(transferToTrans);
+
+                    transferFromTrans.setOwner(user.getAccount());
+                    user.getAccount().getTransactions().add(transferFromTrans);
+
+                    transactionHandler.insertIntoDatabase(transferToTrans);
+                    transactionHandler.insertIntoDatabase(transferFromTrans);
+
+                    request.session(true).attribute("message","Transaccion realizada con exito!");
+                    request.session(true).attribute("message_type","success");
+
+                    response.redirect("/user/" + user.getId());
+
+                }
+                else{
+                    attributes.put("errors",errors);
+                    attributes.put("users",userHandler.findTransferableUsers(user.getUsername()));
+                    attributes.put("template_name","user/transferfunds.ftl");
+                    return new ModelAndView(attributes,Main.BASE_LAYOUT);
+                }
+            }
+            catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return null;
+        },new FreeMarkerEngine());
+
         get("/user/:id",(request, response) -> {
             HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
             User user = userHandler.findObjectWithId(Integer.parseInt(request.params("id")));
             attributes.put("message",request.session(true).attribute("message"));
             attributes.put("message_type",request.session(true).attribute("message_type"));
+
+            request.session(true).attribute("message",null);
+            request.session(true).attribute("message_type",null);
+
             attributes.put("User",user);
             attributes.put("template_name","user/profile.ftl");
             return new ModelAndView(attributes,Main.BASE_LAYOUT);
         },new FreeMarkerEngine());
+
+
 
         get("/user/:id/addfunds",(request, response) -> {
             HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
             try{
                 int id = Integer.parseInt(request.params("id"));
                 User user = userHandler.findObjectWithId(id);
-                attributes.put("User",user);
+                attributes.put("users",user);
 
                 attributes.put("template_name","user/addfunds.ftl");
                 return new ModelAndView(attributes,Main.BASE_LAYOUT);

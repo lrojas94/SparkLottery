@@ -14,9 +14,19 @@
         <div class="col-xs-12">
             <h3>
                 Fondos: ${User.getAccount().getBalance()?string.currency}
-                <a href="/user/${User.getId()}/addfunds" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Agregar fondos</a>
             </h3>
+            <div class="row">
+                <div class="col-xs-6">
+                    <a href="/user/${User.getId()}/addfunds" class="btn btn-success btn-block"><i class="fa fa-plus"></i> Agregar fondos</a>
+                </div>
+                <div class="col-xs-6">
+
+                    <a href="/user/transferfunds" class="btn btn-info btn-block"><i class="fa fa-plus"></i> Transferir fondos</a>
+                </div>
+            </div>
+            <br>
         </div>
+            <br>
         <div class="col-xs-12">
             <div class="panel panel-primary">
                 <div class="panel-heading">Transacciones realizadas</div>
