@@ -138,6 +138,8 @@ public class Users {
         get("/user/:id",(request, response) -> {
             HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
             User user = userHandler.findObjectWithId(Integer.parseInt(request.params("id")));
+            attributes.put("message",request.session(true).attribute("message"));
+            attributes.put("message_type",request.session(true).attribute("message_type"));
             attributes.put("User",user);
             attributes.put("template_name","user/profile.ftl");
             return new ModelAndView(attributes,Main.BASE_LAYOUT);
@@ -205,6 +207,8 @@ public class Users {
                     t.setOwner(user.getAccount());
                     user.getAccount().getTransactions().add(t);
                     transactionHandler.insertIntoDatabase(t);
+                    request.session(true).attribute("message_type","success");
+                    request.session(true).attribute("message","Transaccion realizada correctamente.");
                     response.redirect("/user/"+user.getId());
 
                 }

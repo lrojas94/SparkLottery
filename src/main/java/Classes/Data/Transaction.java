@@ -83,7 +83,7 @@ public class Transaction {
     @Column
     private String message = ""; //A message the user leaves.
     @Column
-    private Date issuedDate;
+    private Date issuedDate = new Date();
     @ManyToOne
     private Account owner;
 

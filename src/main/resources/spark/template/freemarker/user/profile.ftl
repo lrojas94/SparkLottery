@@ -6,12 +6,46 @@
             </h2><!-- Username -->
             <span class="badge">Correo Electronico: ${User.getEmail()}</span>
         </div>
-        <#if user?? && User == user && User.getUsername() != "admin">
+        <#if message?? >
+            <div class="alert alert-${message_type!"success"}">${message}</div>
+        </#if>
+        <#if user?? && (User == user || user.getAdmin()) && User.getUsername() != "admin">
+        <#assign account=User.getAccount()>
         <div class="col-xs-12">
             <h3>
                 Fondos: ${User.getAccount().getBalance()?string.currency}
                 <a href="/user/${User.getId()}/addfunds" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Agregar fondos</a>
             </h3>
+        </div>
+        <div class="col-xs-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Transacciones realizadas</div>
+                <div class="panel-body">
+                    <table class="table table-hover table-responsive">
+                        <thead>
+                        <td hidden>Id</td>
+                        <th>Monto Transferido</th>
+                        <th>Metodo de Transferencia</th>
+                        <th>Descripcion</th>
+                        <th>Fecha</th>
+                        <th>Mensaje adjunto</th>
+                        </thead>
+                        <tbody>
+                        <!-- For ticket in ticket -->
+                            <#list account.getTransactions() as trans>
+                            <tr>
+                                <td hidden>${trans.getId()}</td>
+                                <td>${trans.getAmmount()?string.currency}</td>
+                                <td>${trans.getMethod()}</td>
+                                <td>${trans.getDescription()}</td>
+                                <td>${trans.getIssuedDate()!"DESCONOCIDO"}</td>
+                                <td>${trans.getMessage()}</td>
+                            </tr>
+                            </#list>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
         </#if>
         <div class="col-xs-12">

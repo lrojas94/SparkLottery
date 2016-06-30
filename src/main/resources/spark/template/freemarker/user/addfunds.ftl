@@ -71,7 +71,6 @@
                             <textarea name="msg" id="msg" class="form-control" rows="5"></textarea>
                         </div>
                     </div>
-
                     <div class="col-xs-12">
                         <button type="submit" class="btn btn-success btn-block"><i class="fa fa-plus"></i> Agregar Fondos</button>
                     </div>
