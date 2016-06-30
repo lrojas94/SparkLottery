@@ -167,6 +167,7 @@ public class Users {
                 if(errors.equals("")){
                     Transaction transferToTrans = new Transaction();
                     Transaction transferFromTrans = new Transaction();
+                    transferFromTrans.setIssuedDate(transferToTrans.getIssuedDate()); //set EXACTLY same date.
                     transferToTrans.setAmmount(ammount);
                     transferFromTrans.setAmmount(-ammount);
                     transferToTrans.setMethod(Transaction.Method.USER);
