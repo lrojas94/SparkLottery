@@ -34,6 +34,9 @@
                     </li>
                 </#if>
 
+                <li>
+                    <a href="/game/play">Probar mi suerte!</a>
+                </li>
             </#if>
                 <li>
                     <a href="#services">Ganadores</a>

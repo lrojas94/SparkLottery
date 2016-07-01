@@ -209,11 +209,6 @@ public class Users {
         get("/user/:id",(request, response) -> {
             HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
             User user = userHandler.findObjectWithId(Integer.parseInt(request.params("id")));
-            attributes.put("message",request.session(true).attribute("message"));
-            attributes.put("message_type",request.session(true).attribute("message_type"));
-
-            request.session(true).attribute("message",null);
-            request.session(true).attribute("message_type",null);
 
             attributes.put("User",user);
             attributes.put("template_name","user/profile.ftl");
@@ -227,7 +222,7 @@ public class Users {
             try{
                 int id = Integer.parseInt(request.params("id"));
                 User user = userHandler.findObjectWithId(id);
-                attributes.put("users",user);
+                attributes.put("User",user);
 
                 attributes.put("template_name","user/addfunds.ftl");
                 return new ModelAndView(attributes,Main.BASE_LAYOUT);

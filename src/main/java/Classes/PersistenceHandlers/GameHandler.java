@@ -1,7 +1,11 @@
 package Classes.PersistenceHandlers;
 
 import Classes.Data.Game;
+import Classes.Data.User;
 import Classes.HelperClasses.DatabaseHandler;
+
+import javax.persistence.EntityManager;
+import java.util.List;
 
 /**
  * Created by MEUrena on 6/24/16.
@@ -19,5 +23,28 @@ public class GameHandler extends DatabaseHandler<Game> {
         }
         return instance;
     }
+
+    public Game findActiveLoto() throws Exception {
+        EntityManager em = getEntityManager();
+        try {
+            return (Game) em.createNamedQuery(Game.NAMED_QUERY_ACTIVE_LOTO).getSingleResult();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
+    public Game findActivePale() throws Exception {
+        EntityManager em = getEntityManager();
+        try {
+            return (Game) em.createNamedQuery(Game.NAMED_QUERY_ACTIVE_PALE).getSingleResult();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
 
 }

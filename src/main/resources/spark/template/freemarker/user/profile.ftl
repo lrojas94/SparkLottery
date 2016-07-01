@@ -1,14 +1,19 @@
 <#if User??>
 <div class="container">
+    <#if message?? >
+    <div class="row">
+        <div class="col-xs-12">
+                <div class="alert alert-${message_type!"success"}">${message}</div>
+        </div>
+    </div>
+    </#if>
     <div class="row">
         <div class="col-xs-12">
             <h2>${User}
             </h2><!-- Username -->
             <span class="badge">Correo Electronico: ${User.getEmail()}</span>
         </div>
-        <#if message?? >
-            <div class="alert alert-${message_type!"success"}">${message}</div>
-        </#if>
+
         <#if user?? && (User == user || user.getAdmin()) && User.getUsername() != "admin">
         <#assign account=User.getAccount()>
         <div class="col-xs-12">
@@ -75,9 +80,9 @@
                         <!-- For ticket in ticket -->
                             <#list User.getTickets() as ticket>
                             <tr>
-                                <td>ticket.getIssuedIn().getType()</td>
-                                <td>0000000</td>
-                                <td>ticket.getBetAmount()</td>
+                                <td>${ticket.getIssuedIn().getType()}</td>
+                                <td>${ticket.getNumbers()}</td>
+                                <td>${ticket.getBetAmount()?string.currency}</td>
                             </tr>
                             </#list>
                         </tbody>

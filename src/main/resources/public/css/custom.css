@@ -65,3 +65,29 @@ input,select{
     background: #777777;
     border-color: #777777;
 }
+
+.kv-avatar .file-preview-frame,.kv-avatar .file-preview-frame:hover {
+     margin: 0;
+     padding: 0;
+     border: none;
+     box-shadow: none;
+     text-align: center;
+ }
+
+.kv-avatar .file-input {
+    display: table-cell;
+    max-width: 220px;
+}
+
+a.thumbnail:hover{
+    text-decoration: none;
+}
+
+a.thumbnail{
+    text-align: justify;
+    text-align-last: center;
+}
+
+.flex{
+    display: flex;
+}

@@ -13,14 +13,25 @@ import java.util.List;
  */
 @Entity
 @Table(name = "Game")
+@NamedQueries({
+        @NamedQuery(
+                name = "Game.findActiveLoto",
+                query = "SELECT g FROM Game g WHERE g.type = 'LOTO' AND g.winningTicket = null"
+        ),
+        @NamedQuery(
+                name = "Game.findActivePale",
+                query = "SELECT g FROM Game g WHERE g.type = 'PALE' AND g.winningTicket = null"
+        ),
+})
 public class Game implements Serializable {
-
+    public static String NAMED_QUERY_ACTIVE_LOTO = "Game.findActiveLoto";
+    public static String NAMED_QUERY_ACTIVE_PALE= "Game.findActivePale";
     @Id
     @GeneratedValue
     @Expose
     private int id;
     @Column(name = "baseAmmount")
-    private long baseAmmount;
+    private long baseAmmount = 1000000;
     @Enumerated(EnumType.STRING)
     private GameType type;
     @OneToOne

@@ -6,6 +6,8 @@ package Classes;
 import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
+import Classes.Data.Ticket;
+import Classes.Data.Transaction;
 import Classes.Data.User;
 import Classes.PersistenceHandlers.UserHandler;
 import Classes.Routers.Admin;
@@ -22,6 +24,17 @@ public class Main {
     public final static String MODEL_PARAM = "model";
     public static final String BASE_LAYOUT = "header_footer_layout.ftl";
     public static File uploadDir = new File("uploads");
+
+
+    public static Transaction createTicketTransaction(Ticket ticket){
+        Transaction t = new Transaction();
+        t.setOwner(ticket.getOwner().getAccount());
+        t.setDescription("Juego de " + ticket.getIssuedIn().getType());
+        t.setAmmount(-ticket.getBetAmount());
+        t.setMethod(Transaction.Method.GAMETICKET);
+
+        return t;
+    }
 
     public static void main(String[] args) {
 

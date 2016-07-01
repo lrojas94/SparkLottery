@@ -21,10 +21,12 @@ public class Ticket implements Serializable {
     private int id;
     @Column(name = "emit_date")
     @Expose
-    private Date emitDate;
+    private Date emitDate = new Date();
     @Column(name = "bet_amount")
     @Expose
     private double betAmount; // Should it be double type?
+    @Column
+    private String numbers = "";
     @ManyToOne
     @JoinColumn(name = "owner", nullable = false)
     @Expose
@@ -59,7 +61,7 @@ public class Ticket implements Serializable {
         return betAmount;
     }
 
-    public void setBetAmount(int betAmount) {
+    public void setBetAmount(double betAmount) {
         this.betAmount = betAmount;
     }
 
@@ -87,5 +89,14 @@ public class Ticket implements Serializable {
 
     public void setIssuedIn(Game issuedIn) {
         this.issuedIn = issuedIn;
+    }
+
+
+    public String getNumbers() {
+        return numbers;
+    }
+
+    public void setNumbers(String numbers) {
+        this.numbers = numbers;
     }
 }
