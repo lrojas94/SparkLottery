@@ -4,18 +4,18 @@ import static spark.Spark.*;
 import static spark.debug.DebugScreen.enableDebugScreen;
 
 import Classes.Data.*;
+import Classes.Game.RandomGenerator;
 import Classes.HelperClasses.AuthFilter;
+import Classes.HelperClasses.Utilities;
 import Classes.Main;
 import Classes.PersistenceHandlers.*;
+import com.google.gson.JsonArray;
 import spark.ModelAndView;
 import spark.TemplateEngine;
 import spark.template.freemarker.FreeMarkerEngine;
 
 import java.awt.image.RescaleOp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +32,7 @@ public class Game {
 
         try{
             Classes.Data.Game activeLoto = gameHandler.findActiveLoto();
-            Classes.Data.Game activePale = gameHandler.findActiveLoto();
+            Classes.Data.Game activePale = gameHandler.findActivePale();
 
             if(activeLoto == null){
                 activeLoto = new Classes.Data.Game();
@@ -43,7 +43,7 @@ public class Game {
             if(activePale == null){
                 activePale = new Classes.Data.Game();
                 activePale.setType(Classes.Data.Game.GameType.PALE);
-                gameHandler.insertIntoDatabase(activeLoto);
+                gameHandler.insertIntoDatabase(activePale);
             }
 
 
@@ -110,9 +110,57 @@ public class Game {
                 user.getAccount().getTransactions().add(Main.createTicketTransaction(ticket));
                 transactionHandler.insertIntoDatabase(trans);
 
-                //Should redirect to randomizer but now we will redirect to user:
-                request.session(true).attribute("message","Usted ha jugado la Loto satisfactoriamente!");
-                response.redirect("/user/" + user.getId());
+                //SIMULATE GAME:
+                RandomGenerator gen = new RandomGenerator();
+                int[] winningNumbers = gen.getNumbers(5);
+                //72,133
+                if(winningNumbers != null){
+                    //We can work with this:
+                    attributes.put("winningNumbers",winningNumbers);
+                    boolean isWinner = true;
+                    int[] ticketNums = Utilities.stringToIntArray(ticket.getNumbers());
+                    for(int n: winningNumbers){
+                        boolean exist = false;
+                        for(int t: ticketNums){
+                            if(n == t)
+                                exist = true;
+                        }
+                        if(!exist){
+                            isWinner = false;
+                            break;
+                        }
+                    }
+                    if(isWinner || (ticketNums[0] + ticketNums[19] == 100)){
+                        //WINNER o/
+                        activeLoto.setWinningTicket(ticket);
+                        gameHandler.updateObject(activeLoto);
+                        //create new Pale:
+                        Classes.Data.Game loto = new Classes.Data.Game();
+                        loto.setBaseAmmount(1000000);
+                        loto.setType(Classes.Data.Game.GameType.LOTO);
+                        //save:
+                        gameHandler.insertIntoDatabase(loto);
+                        //Create winning trans:
+                        Transaction winningTrans = new Transaction();
+                        winningTrans.setMethod(Transaction.Method.WINNER);
+                        winningTrans.setAmmount(activeLoto.getWinnersAmmount());
+                        winningTrans.setOwner(user.getAccount());
+                        winningTrans.setDescription("Loto Ganado con apuesta de: " + ticket.getBetAmount());
+                        transactionHandler.insertIntoDatabase(winningTrans);
+                        user.getAccount().getTransactions().add(winningTrans);
+                        request.session(true).attribute("user",user); //
+                        attributes.put("didWin", true);
+                    }
+                    else{
+                        attributes.put("didWin",false);
+                    }
+                    attributes.put("template_name","winner/selection.ftl");
+                    return new ModelAndView(attributes,Main.BASE_LAYOUT);
+                }
+                else{
+                    request.session(true).attribute("message","El API de Numeros Aleatorios fallo en responder. Lo sentimos.");
+                    response.redirect("/user/" + user.getId());
+                }
             }
 
             return null;
@@ -145,13 +193,15 @@ public class Game {
                 double bet = Double.parseDouble(request.queryParams("ammount"));
 
                 if(bet > user.getAccount().getBalance()){
+
                     String errors = "No puede apostar mas de lo que tiene en su cuenta.";
                     attributes.put("errors",errors);
                     attributes.put("template_name","game/pale.ftl");
                     return new ModelAndView(attributes, Main.BASE_LAYOUT );
+
                 }
 
-                Classes.Data.Game activePale = gameHandler.findActiveLoto();
+                Classes.Data.Game activePale = gameHandler.findActivePale();
 
                 String ticketPlay = numa + "," + numb + "," + numc;
                 Ticket ticket = new Ticket();
@@ -164,8 +214,50 @@ public class Game {
                 ticketHandler.insertIntoDatabase(ticket);
                 transactionHandler.insertIntoDatabase(trans);
 
-                request.session(true).attribute("message","Usted ha jugado la Pale!");
-                response.redirect("/user/" + user.getId());
+
+                //SIMULATE GAME:
+                RandomGenerator gen = new RandomGenerator();
+                int[] winningNumbers = gen.getNumbers(3);
+                //72,133
+                if(winningNumbers != null){
+                    //We can work with this:
+                    attributes.put("winningNumbers",winningNumbers);
+                    if((winningNumbers[0] == numa &&
+                            winningNumbers[1] == numb &&
+                            winningNumbers[2] == numc) || (numa + numc == 100)){
+                        //WINNER o/
+                        activePale.setWinningTicket(ticket);
+                        gameHandler.updateObject(activePale);
+                        //create new Pale:
+                        Classes.Data.Game pale = new Classes.Data.Game();
+                        pale.setBaseAmmount(0);
+                        pale.setType(Classes.Data.Game.GameType.PALE);
+                        //save:
+                        gameHandler.insertIntoDatabase(pale);
+                        //Create winning trans:
+                        Transaction winningTrans = new Transaction();
+                        winningTrans.setMethod(Transaction.Method.WINNER);
+                        winningTrans.setAmmount(activePale.getWinnersAmmount());
+                        winningTrans.setOwner(user.getAccount());
+                        winningTrans.setDescription("Pale Ganado con apuesta de: " + ticket.getBetAmount());
+                        transactionHandler.insertIntoDatabase(winningTrans);
+                        user.getAccount().getTransactions().add(winningTrans);
+                        request.session(true).attribute("user",user); //
+                        attributes.put("didWin", true);
+                    }
+                    else{
+                        attributes.put("didWin",false);
+                    }
+                    attributes.put("template_name","winner/selection.ftl");
+                    return new ModelAndView(attributes,Main.BASE_LAYOUT);
+                }
+                else{
+                    request.session(true).attribute("message","El API de Numeros Aleatorios fallo en responder. Lo sentimos.");
+                    response.redirect("/user/" + user.getId());
+                }
+
+
+                //response.redirect("/user/" + user.getId());
 
             }
             catch (Exception e){

@@ -70,7 +70,8 @@ public class Transaction {
     public enum Method{
         USER,
         CREDITCARD,
-        GAMETICKET
+        GAMETICKET,
+        WINNER
     }
     @Id
     @GeneratedValue
