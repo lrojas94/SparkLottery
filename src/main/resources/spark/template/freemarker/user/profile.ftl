@@ -36,7 +36,7 @@
             <div class="panel panel-primary">
                 <div class="panel-heading">Transacciones realizadas</div>
                 <div class="panel-body">
-                    <table class="table table-hover table-responsive">
+                    <table class="table table-hover table-responsive" id="show-user-transactions">
                         <thead>
                         <td hidden>Id</td>
                         <th>Monto Transferido</th>
@@ -70,7 +70,7 @@
                     Tickets jugados
                 </div>
                 <div class="panel-body">
-                    <table class="table table-hover table-responsive">
+                    <table class="table table-hover table-responsive" id="show-user-tickets">
                         <thead>
                         <th>Juego</th>
                         <th>Numero de Ticket</th>

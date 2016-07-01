@@ -64,7 +64,6 @@ var Winners = function(){
                 targets : 0,
                 data: function(row,type,val,meta){
                     var winner = row;
-                    var winnerData = [winner.id,winner.comment,winner.path,winner.player];
                     var winnerContainer = $('#winner-container-template').clone();
                     winnerContainer.attr("id","");
                     //add title:
@@ -83,8 +82,34 @@ var Winners = function(){
     });
 };
 
+var Transactions = function(){ 
+    //Init data tables for user related stuff:
+    var HelpersNamespace = Helpers();
+
+    $('#show-user-transactions').dataTable({
+        fixedHeader : {
+            header: true
+        },
+        language : HelpersNamespace.DTLanguage,
+        lengthMenu : [5,10,25,50],
+        pageLength : 5
+    });
+
+    $('#show-user-tickets').dataTable({
+        fixedHeader : {
+            header: true
+        },
+        language : HelpersNamespace.DTLanguage,
+        lengthMenu : [5,10,25,50],
+        pageLength : 5
+    });
+
+    return {};
+};
+
 $(function() {
-    var ArticleNamespace = Winners();
+    var WinnerNamespace = Winners();
+    var TransactionNamespace = Transactions();
     var HelpersNamespace = Helpers();
 });
 
