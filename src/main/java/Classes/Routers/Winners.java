@@ -5,11 +5,13 @@ import static Classes.Main.uploadDir;
 import static Classes.Main.cloudinary;
 import static spark.Spark.*;
 
-import Classes.Data.User;
-import Classes.Data.Winner;
+import Classes.Data.*;
+import Classes.Data.Game;
 import Classes.DataTables.ReturnData;
 import Classes.DataTables.SentParameters;
+import Classes.HelperClasses.AuthFilter;
 import Classes.Main;
+import Classes.PersistenceHandlers.GameHandler;
 import Classes.PersistenceHandlers.WinnerHandler;
 import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
@@ -38,6 +40,7 @@ public class Winners {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.excludeFieldsWithoutExposeAnnotation().create();
+        GameHandler gameHandler = GameHandler.getInstance();
 
         post("/datatable/winners", (request, response) -> {
             try {
@@ -57,7 +60,7 @@ public class Winners {
             }
         }, gson::toJson);
 
-        get("/winner/list", (request, response) -> {
+        get("winner/list", (request, response) -> {
             HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
             attributes.put("template_name","winner/list.ftl");
 
@@ -70,9 +73,26 @@ public class Winners {
             return new ModelAndView(attributes,Main.BASE_LAYOUT);
         }, new FreeMarkerEngine());
 
+        before("/winner/add",new AuthFilter(new FreeMarkerEngine(), new HashSet<AuthRoles>()));
+
         get("/winner/add", (request, response) -> {
             //login form
             HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
+            User user = request.session(true).attribute("user");
+            Classes.Data.Game latestPale = gameHandler.findLatestPale();
+            Classes.Data.Game latestLoto = gameHandler.findLatestLoto();
+
+            if((latestLoto == null && latestPale == null)
+                || (latestLoto == null && !user.getUsername().equals(latestPale.getWinningTicket().getOwner().getUsername()))
+                || (latestPale == null && !user.getUsername().equals(latestLoto.getWinningTicket().getOwner().getUsername()))
+                || (latestPale != null && latestLoto != null && !user.getUsername().equals(latestPale.getWinningTicket().getOwner().getUsername())
+                && !user.getUsername().equals(latestLoto.getWinningTicket().getOwner().getUsername()))){
+                request.session(true).attribute("message","Usted no puede publicar en ganadores debido a que no ha ganado recientemente.");
+                request.session(true).attribute("message_type","danger");
+
+                response.redirect("/user/" + user.getId());
+            }
+
             attributes.put("template_name","winner/add.ftl");
 
             return new ModelAndView(attributes,Main.BASE_LAYOUT);
@@ -134,6 +154,19 @@ public class Winners {
         winner.setComment(comment);
         winner.setPath(imgPath);
         winner.setPlayer(player);
+
+        GameHandler gameHandler = GameHandler.getInstance();
+        Game latestLoto = gameHandler.findLatestLoto();
+        Game latestPale = gameHandler.findLatestPale();
+        if(latestLoto != null && latestLoto.getWinningTicket().getOwner().getUsername().equals(player.getUsername())){
+            latestLoto.setWinnerCommented(true);
+            gameHandler.updateObject(latestLoto);
+        }
+
+        if(latestPale != null && latestPale.getWinningTicket().getOwner().getUsername().equals(player.getUsername())){
+            latestPale.setWinnerCommented(true);
+            gameHandler.updateObject(latestPale);
+        }
 
         try {
             winnerHandler.insertIntoDatabase(winner);

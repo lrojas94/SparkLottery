@@ -138,6 +138,12 @@ public class Users {
             return new ModelAndView(attributes,Main.BASE_LAYOUT);
         },new FreeMarkerEngine());
 
+        get("user/logout",(request, response) -> {
+            request.session(true).attribute("user",null);
+            response.redirect("/");
+            return  null;
+        });
+
         get("/user/transferfunds",(request, response) -> {
             HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);
             User user = request.session().attribute("user");
@@ -233,6 +239,8 @@ public class Users {
 
             return null;
         },new FreeMarkerEngine());
+
+
 
         post("/user/:id/addfunds",(request, response) -> {
             HashMap<String,Object> attributes = request.attribute(Main.MODEL_PARAM);

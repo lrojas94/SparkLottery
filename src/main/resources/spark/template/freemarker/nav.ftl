@@ -37,6 +37,14 @@
                 <li>
                     <a href="/game/play">Probar mi suerte!</a>
                 </li>
+                <#if user.canPublishInWinners()>
+                    <li>
+                        <a href="/winner/add">Publicar Comentario Ganador!</a>
+                    </li>
+                </#if>
+                <li>
+                    <a href="/user/logout">Cerrar sesion</a>
+                </li>
             </#if>
                 <li>
                     <a href="/winner/list">Ganadores</a>

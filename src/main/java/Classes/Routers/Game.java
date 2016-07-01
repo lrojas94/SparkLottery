@@ -86,11 +86,11 @@ public class Game {
             User user = request.session().attribute("user");
 
 
-            Pattern regex = Pattern.compile("((\\d+)(,\\s*\\d+){19})");
+            Pattern regex = Pattern.compile("((0*(?:[1-9][0-9]?))(,\\s*(0*(?:[1-9][0-9]?))){19})");
             Matcher matcher = regex.matcher(request.queryParams("nums"));
             if(!matcher.matches()){
                 attributes.put("nums",request.queryParams("nums"));
-                attributes.put("errors","Se requiere insertar una cadena de 20 numeros separados por coma.");
+                attributes.put("errors","Se requiere insertar una cadena de 20 numeros separados por coma y menores a 100.");
                 attributes.put("template_name","game/loto.ftl");
                 return new ModelAndView(null, Main.BASE_LAYOUT);
             }

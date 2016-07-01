@@ -48,13 +48,13 @@
                         </div>
 
                         <div class="col-xs-4">
-                            <input type="number" value="${numa!""}" min="0" step="1" class="form-control" name="numa" id="numa" placeholder="">
+                            <input type="number" value="${numa!""}" min="0" step="1" max="100" class="form-control" name="numa" id="numa" placeholder="">
                         </div>
                         <div class="col-xs-4">
-                            <input type="number" value="${numb!""}" min="0" step="1" class="form-control" name="numb" id="numb" placeholder="">
+                            <input type="number" value="${numb!""}" min="0" step="1" max="100" class="form-control" name="numb" id="numb" placeholder="">
                         </div>
                         <div class="col-xs-4">
-                            <input type="number" value="${numc!""}" min="0" step="1" class="form-control" name="numc" id="numc" placeholder="">
+                            <input type="number" value="${numc!""}" min="0" step="1" max="100" class="form-control" name="numc" id="numc" placeholder="">
                         </div>
                     </div>
 

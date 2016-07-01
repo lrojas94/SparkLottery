@@ -156,4 +156,8 @@ public class User implements Serializable {
         return String.format("%s %s", firstName, lastName);
     }
 
+    public boolean canPublishInWinners(){
+        return tickets.stream().filter(ticket -> ticket.getWinnerIn() != null && !ticket.getWinnerIn().isWinnerCommented()).findAny().isPresent();
+    }
+
 }

@@ -33,7 +33,8 @@
                 </div>
                 <div class="form-group">
                     <label for="nums"><i class="fa fa-money"></i> Numeros a jugar!</label>
-                    <input type="text" title="Escriba 20 numeros separados por comas" value="${nums!""}" pattern="((\d+)(,\s*\d+){19})" class="form-control" name="nums" id="nums" placeholder="1,2,3,..">
+                    <input type="text" title="Escriba 20 numeros separados por comas y menores a 100" value="${nums!""}"
+                           pattern="((0*(?:[1-9][0-9]?))(,\s*(0*(?:[1-9][0-9]?))){19})" class="form-control" name="nums" id="nums" placeholder="1,2,3,..">
                 </div>
             </div>
             <div class="col-xs-12">

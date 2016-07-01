@@ -46,5 +46,26 @@ public class GameHandler extends DatabaseHandler<Game> {
         }
     }
 
+    public Game findLatestLoto() throws Exception {
+        EntityManager em = getEntityManager();
+        try {
+            return (Game) em.createNamedQuery(Game.NAMED_QUERY_LATEST_LOTO).setMaxResults(1).getSingleResult();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
+    public Game findLatestPale() throws Exception {
+        EntityManager em = getEntityManager();
+        try {
+            return (Game) em.createNamedQuery(Game.NAMED_QUERY_LATEST_PALE).setMaxResults(1).getSingleResult();
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
 
 }
