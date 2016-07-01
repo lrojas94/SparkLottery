@@ -33,11 +33,13 @@
                 </div>
                 <div class="form-group">
                     <div class="row">
-                        <div class="form-group">
-                            <label for="ammount">Cantidad a Apostar</label>
-                            <input type="number" min="1" step="0.01" max="${user.getAccount().getBalance()}"
-                                   title="Es necesario establecer la cantidad a apostar"
-                                   name="ammount" id="ammount" class="form-control" required>
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <label for="ammount">Cantidad a Apostar</label>
+                                <input type="number" min="1" step="0.01" max="${user.getAccount().getBalance()}"
+                                       title="Es necesario establecer la cantidad a apostar"
+                                       name="ammount" id="ammount" class="form-control" required>
+                            </div>
                         </div>
                     </div>
                     <div class="row">

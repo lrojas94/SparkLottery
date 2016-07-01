@@ -11,6 +11,7 @@ import Classes.Data.Transaction;
 import Classes.Data.User;
 import Classes.PersistenceHandlers.UserHandler;
 import Classes.Routers.Admin;
+import Classes.Routers.Game;
 import Classes.Routers.Winners;
 import Classes.Routers.Users;
 import spark.ModelAndView;
@@ -84,6 +85,7 @@ public class Main {
         Winners.Routes(); // Creates Winners Routes
         Users.Routes(); // Creates Users Routes
         Admin.Routes(); //create Admin Routes
+        Game.Routes();
 
     }
 
