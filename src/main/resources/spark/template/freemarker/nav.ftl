@@ -27,6 +27,13 @@
                 <li>
                     <a href="/user/${user.getId()}">Perfil</a>
                 </li>
+
+                <#if user.getAdmin()>
+                    <li>
+                        <a href="/admin">Admin</a>
+                    </li>
+                </#if>
+
             </#if>
                 <li>
                     <a href="#services">Ganadores</a>

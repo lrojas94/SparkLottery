@@ -62,4 +62,15 @@ public class UserHandler extends DatabaseHandler<User> {
         }
     }
 
+    public List<User> findAllUsers() throws Exception{
+        EntityManager em = getEntityManager();
+        try {
+            return ((List<User>)em.createNamedQuery(User.QUERY_NAME_FIND_ALL_USERS).getResultList());
+        }catch (Exception e){
+            throw e;
+        }finally {
+            em.close();
+        }
+    }
+
 }

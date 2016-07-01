@@ -26,6 +26,10 @@ import com.google.gson.annotations.Expose;
         @NamedQuery(
                 name = "User.findAllUsersToTransferTo",
                 query = "SELECT u from User u WHERE u.username <> :username AND u.username <> 'admin'"
+        ),
+        @NamedQuery(
+                name = "User.findAllUsers",
+                query = "select u from User u where u.username <> 'admin' order by u.firstName"
         )
 })
 
@@ -33,7 +37,7 @@ public class User implements Serializable {
     public static String QUERY_NAME_FIND_BY_USERNAME = "User.findUserByUsername";
     public static String QUERY_NAME_FIND_BY_USERNAME_AND_PASSWORD = "User.findUserByUsernameAndPassword";
     public static String QUERY_NAME_FIND_TRANSFERABLE = "User.findAllUsersToTransferTo";
-
+    public static String QUERY_NAME_FIND_ALL_USERS = "User.findAllUsers";
     @Id
     @GeneratedValue
     @Expose

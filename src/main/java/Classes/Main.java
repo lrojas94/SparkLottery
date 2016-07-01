@@ -8,6 +8,7 @@ import static spark.debug.DebugScreen.enableDebugScreen;
 
 import Classes.Data.User;
 import Classes.PersistenceHandlers.UserHandler;
+import Classes.Routers.Admin;
 import Classes.Routers.Winners;
 import Classes.Routers.Users;
 import spark.ModelAndView;
@@ -69,6 +70,7 @@ public class Main {
 
         Winners.Routes(); // Creates Winners Routes
         Users.Routes(); // Creates Users Routes
+        Admin.Routes(); //create Admin Routes
 
     }
 
