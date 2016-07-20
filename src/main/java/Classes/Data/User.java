@@ -59,6 +59,7 @@ public class User implements Serializable {
     @Column(name = "is_administrator")
     private Boolean isAdmin = false;
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL)
+    @Expose
     private Account account;
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Ticket> tickets = new HashSet<>();
