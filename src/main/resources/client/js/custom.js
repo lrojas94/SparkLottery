@@ -1,34 +1,72 @@
 var REST_HOST = 'http://localhost:4567/api/';
+var TOKEN = "";
+var USER_INFO;
+
+var SetupTransactions = function(clean) {
+  clean = clean || false;
+
+  if(clean) {
+    $('#login-container').hide();
+    $('#tabs-container').removeClass('hide');
+  }
+
+  $.ajax({
+    url: REST_HOST + 'game/list',
+    method: 'get',
+    dataType: 'json',
+    data: { username : 'data' },
+    success: function(transactionData) {
+      var tableBody = $('#tabs-container').find('table tbody');
+      $(tableBody).html('');
+      for(trans of transactionData) {
+        var rowData =  `
+        <tr>
+        <td>${trans.emitDate}</td>
+        <td>RD$ ${trans.betAmount}</td>
+        <td>${trans.issuedIn.type}</td>
+        <td>${trans.numbers}</td>
+        <td>${typeof trans.winnerIn !== 'undefined' && trans.winnerIn !== null ? 'Ganador' : 'Perdedor'}</td>
+        </tr>`;
+        console.log(trans.winnerIn);
+        $(tableBody).append(rowData);
+      }
+    }
+  });
+}
+
+var SetupUserInfo = function() {
+  var userData = USER_INFO;
+  console.log(userData);
+  $('#user-info').find('h4').text(`Bienvenido ${userData.firstName} ${userData.lastName}`);
+  $('#user-info').find('p').text(`Balance actual: RD$ ${ userData.account ? userData.account.balance : 0 }`);
+}
 
 var UserLogin = function(userData) {
-  // if(userData.username) {
-    //Login was successful!!
-    $('#login-container').remove();
-    $('#tabs-container').removeClass('hide');
-    $.ajax({
-      url: REST_HOST + 'game/list',
-      method: 'get',
-      dataType: 'json',
-      data: { some : 'data' },
-      success: function(transactionData) {
-        var tableBody = $('#tabs-container').find('table tbody');
-        for(trans of transactionData) {
-          var rowData =  `
-          <tr>
-          <td>${trans.emitDate}</td>
-          <td>${trans.betAmmount}</td>
-          <td>${trans.issuedIn.type}</td>
-          <td>${trans.numbers}</td>
-          <td>${trans.winnerIn !== 'undefined' && trans.winnerIn !== null ? 'GANADOR' : 'PERDEDOR'}</td>
-          </tr>`;
-          $(tableBody).append(rowData);
-        }
-      }
-    });
-  // }
+  if(userData.username) {
+    localStorage.setItem('user', JSON.stringify(userData));
+    // Login was successful!!
+    USER_INFO = userData;
+    SetupUserInfo();
+    SetupTransactions(true);
+
+  }
 }
 
 $(function() {
+  if(localStorage.user){
+    USER_INFO = JSON.parse(localStorage.user);
+    SetupTransactions(true);
+    SetupUserInfo();
+  }
+
+  $('#logout-btn').click(function() {
+    localStorage.removeItem('user');
+    location.reload();
+  })
+
+  $('#trans-link').click(function() {
+    SetupTransactions(false);
+  });
 
   $('#login-form').submit(function(e) {
 
@@ -41,7 +79,7 @@ $(function() {
       dataType: 'json',
       success: function(userData){
         console.log(userData);
-        UserLogin();
+        UserLogin(userData);
       },
       error: function(e) {
         // alert("So sad :( Ther was an error...");

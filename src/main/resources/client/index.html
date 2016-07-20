@@ -46,11 +46,11 @@
       <div class='row'>
         <form action="" class='col s12' id='login-form'>
           <div class="input-field col s12">
-            <input placeholder="Su nombre de usuario de SparkLotto" id="username" type="text" class="validate" required>
+            <input placeholder="Su nombre de usuario de SparkLotto" id="username" name='username' type="text" class="validate" required>
             <label for="username">Nombre de usuario</label>
           </div>
           <div class="input-field col s12">
-            <input id="password" type="password" class="validate" required>
+            <input id="password" type="password" name='password' class="validate" required>
             <label for="password">Contrasena</label>
           </div>
           <button class='btn waves-effect waves-light s12 right'> Iniciar sesion </button>
@@ -62,11 +62,19 @@
 
   <div class='container hide' id='tabs-container'>
     <div class='section card-panel hoverable'>
+      <div class='row'>
+        <div class='col s12 center-align' id='user-info'>
+          <h4 class='center'>NOMBRE DE USUARIO</h4>
+          <p>MONTO</p><br>
+          <button class='btn' id='logout-btn'>Cerrar Sesion</button>
+        </div>
+      </div>
       <div class="row">
         <div class="col s12">
           <ul class="tabs">
-            <li class="tab col s6"><a class="active" href="#show-trans">Juegos Anteriores</a></li>
-            <li class="tab col s6"><a href="#play-game">Jugar</a></li>
+            <li class="tab col s6"><a class="active" href="#show-trans" id='trans-link'>Juegos Anteriores</a></li>
+            <li class="tab col s6"><a href="#loto-container">LOTO</a></li>
+            <li class="tab col s6"><a href="#pale-container">PALE</a></li>
           </ul>
         </div>
         <div id="show-trans" class="col s12">
@@ -80,14 +88,13 @@
                  <th data-field="nums">Estado</th>
              </tr>
            </thead>
-
            <tbody>
            </tbody>
          </table>
         </div>
-        <div id="play-game" class="col s12">
 
-        </div>
+        <div id='loto-container'></div>
+        <div id='pale-container'></div>
       </div>
     </div>
   </div>
