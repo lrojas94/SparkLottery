@@ -43,6 +43,7 @@ public class Game implements Serializable {
     @Column(name = "baseAmmount")
     private long baseAmmount = 1000000;
     @Enumerated(EnumType.STRING)
+    @Expose
     private GameType type;
     @OneToOne
     private Ticket winningTicket = null;

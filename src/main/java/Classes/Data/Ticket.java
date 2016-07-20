@@ -26,14 +26,17 @@ public class Ticket implements Serializable {
     @Expose
     private double betAmount; // Should it be double type?
     @Column
+    @Expose
     private String numbers = "";
     @ManyToOne
     @JoinColumn(name = "owner", nullable = false)
     @Expose
     private User owner;
     @OneToOne(mappedBy = "winningTicket")
+    @Expose
     private Game winnerIn = null;
     @ManyToOne
+    @Expose
     private Game issuedIn;
 
     // Missing Number Relation, should be added

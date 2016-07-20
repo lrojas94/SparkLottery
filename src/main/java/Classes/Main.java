@@ -12,11 +12,8 @@ import Classes.Data.Constants;
 import Classes.Data.User;
 import Classes.Data.Winner;
 import Classes.PersistenceHandlers.UserHandler;
-import Classes.Routers.Admin;
-import Classes.Routers.Game;
+import Classes.Routers.*;
 import Classes.PersistenceHandlers.WinnerHandler;
-import Classes.Routers.Winners;
-import Classes.Routers.Users;
 import com.cloudinary.utils.ObjectUtils;
 import spark.ModelAndView;
 import spark.template.freemarker.FreeMarkerEngine;
@@ -100,7 +97,7 @@ public class Main {
         Users.Routes(); // Creates Users Routes
         Admin.Routes(); //create Admin Routes
         Game.Routes();
-
+        API.Routes();
     }
 
     private static void setupCloudinary() {
