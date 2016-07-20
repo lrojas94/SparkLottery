@@ -49,9 +49,6 @@
                 <li>
                     <a href="/winner/list">Ganadores</a>
                 </li>
-                <li>
-                    <a href="#contact">Informacion</a>
-                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
