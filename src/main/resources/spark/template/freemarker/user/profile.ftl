@@ -39,6 +39,7 @@
                     <table class="table table-hover table-responsive" id="show-user-transactions">
                         <thead>
                         <td hidden>Id</td>
+                        <th>Pais de Origen</th>
                         <th>Monto Transferido</th>
                         <th>Metodo de Transferencia</th>
                         <th>Descripcion</th>
@@ -50,6 +51,14 @@
                             <#list account.getTransactions() as trans>
                             <tr>
                                 <td hidden>${trans.getId()}</td>
+                                <div align="center">
+                                    <td>
+                                        <#assign x = trans.getCountryCode()!"null">
+                                        <#if x != "null">
+                                            <img src="http://www.geonames.org/flags/x/${x}.gif" width="auto" height="5%">
+                                        </#if>
+                                    </td>
+                                </div>
                                 <td>${trans.getAmmount()?string.currency}</td>
                                 <td>${trans.getMethod()}</td>
                                 <td>${trans.getDescription()}</td>

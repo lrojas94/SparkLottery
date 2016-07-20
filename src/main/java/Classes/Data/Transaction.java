@@ -72,7 +72,7 @@ public class Transaction {
     }
 
     public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
+        this.countryCode = countryCode.toLowerCase();
     }
 
     public enum Method{
