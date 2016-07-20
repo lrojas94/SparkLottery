@@ -29,6 +29,25 @@ public class Admin {
             return new ModelAndView(attributes,Main.BASE_LAYOUT);
         },new FreeMarkerEngine());
 
+        get("/admin/makeadmin/:id",(request, response) -> {
+            int id = Integer.parseInt(request.params(":id"));
+            User u = UserHandler.getInstance().findObjectWithId(id);
+            u.setAdmin(true);
+            UserHandler.getInstance().updateObject(u);;
+
+            response.redirect("/admin");
+            return null;
+        });
+
+        get("/admin/remove/:id",(request, response) -> {
+            int id = Integer.parseInt(request.params(":id"));
+            User u = UserHandler.getInstance().findObjectWithId(id);
+            u.setAdmin(false);
+            UserHandler.getInstance().updateObject(u);;
+
+            response.redirect("/admin");
+            return null;
+        });
         post("/admin/delete/:id", (request, response) -> {
             int id = Integer.parseInt(request.params(":id"));
             UserHandler.getInstance().deleteObjectWithId(id);

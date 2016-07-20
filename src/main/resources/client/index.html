@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!-- saved from url=(0065)http://materializecss.com/templates/starter-template/preview.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0">
+  <title>SparkLottery Client</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="./css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+  <link href="./css/custom.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+</head>
+<body>
+  <nav class="blue-grey darken-3" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="http://localhost:4567" class="brand-logo">SparkLottery</a>
+      <ul class="right hide-on-med-and-down">
+        <!-- <li><a href="http://materializecss.com/templates/starter-template/preview.html#">Navbar Link</a></li> -->
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav" style="transform: translateX(-100%);">
+        <!-- <li><a href="http://materializecss.com/templates/starter-template/preview.html#">Navbar Link</a></li> -->
+      </ul>
+    </div>
+  </nav>
+  <div class="section no-pad-bot no-pad-top  blue-grey darken-4">
+    <div class="container">
+      <br><br>
+      <h2 class="header center orange-text text-lighten-1">A SparkLottery Client</h2>
+      <div class="row center">
+        <h5 class="header col s12 white-text">Un cliente utilizando el REST API de Nuestro proyecto SparkLottery</h5>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container" id='login-container'>
+    <div class="section card-panel hoverable">
+
+      <div class='row'>
+        <h4 class='col s12 cyan-text text-darken-4 center'>Inicia sesion ahora</h4>
+        <p class='col s12'>
+          Con nuestra implementacion podras no solo ver sus ultimas transacciones, sino tambien jugar! No obstante, asegurese de tener fondos,
+          de lo contrario, esto no le sera posible.
+        </p>
+      </div>
+      <div class='row'>
+        <form action="" class='col s12' id='login-form'>
+          <div class="input-field col s12">
+            <input placeholder="Su nombre de usuario de SparkLotto" id="username" type="text" class="validate" required>
+            <label for="username">Nombre de usuario</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="password" type="password" class="validate" required>
+            <label for="password">Contrasena</label>
+          </div>
+          <button class='btn waves-effect waves-light s12 right'> Iniciar sesion </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <div class='container hide' id='tabs-container'>
+    <div class='section card-panel hoverable'>
+      <div class="row">
+        <div class="col s12">
+          <ul class="tabs">
+            <li class="tab col s6"><a class="active" href="#show-trans">Juegos Anteriores</a></li>
+            <li class="tab col s6"><a href="#play-game">Jugar</a></li>
+          </ul>
+        </div>
+        <div id="show-trans" class="col s12">
+          <table>
+           <thead>
+             <tr>
+                 <th data-field="date">Fecha</th>
+                 <th data-field="bet">Cantidad Apostada</th>
+                 <th data-field="game">Tipo de Juego</th>
+                 <th data-field="nums">Numeros</th>
+                 <th data-field="nums">Estado</th>
+             </tr>
+           </thead>
+
+           <tbody>
+           </tbody>
+         </table>
+        </div>
+        <div id="play-game" class="col s12">
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="page-footer  blue-grey darken-1">
+    <div class="container">
+      <div class="row">
+        <div class="col s12">
+          <h5 class="white-text">Sobre la Aplicacion</h5>
+          <p class="grey-text text-lighten-4">
+            La presente utiliza Jquery y Ajax para comunicarse con SparkLottery haciendo uso de su API REST.
+            Si bien de momento no se hace necesario tener un codigo de aplicacion, por razones de seguridad,
+            es algo importante a tomar en cuenta en futuras versiones de la aplicacion.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-copyright">
+      <div class="container">
+      Made by <span class='orange-text text-lighten-1'>Luis E. Rojas | Manuel Urena | Edward Romero</span>
+      </div>
+    </div>
+  </footer>
+
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+  <script src="./js/materialize.js"></script>
+  <script src="./js/custom.js"></script>
+  <!-- <script src="./js/init.js"></script> -->
+
+
+
+<div class="hiddendiv common"></div><div class="drag-target" style="left: 0px; touch-action: pan-y; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></div><div id="window-resizer-tooltip" style="display: none;"><a href="http://materializecss.com/templates/starter-template/preview.html#" title="Edit settings"></a><span class="tooltipTitle">Window size: </span><span class="tooltipWidth" id="winWidth">1301</span> x <span class="tooltipHeight" id="winHeight">744</span><br><span class="tooltipTitle">Viewport size: </span><span class="tooltipWidth" id="vpWidth">1057</span> x <span class="tooltipHeight" id="vpHeight">654</span></div></body></html>
