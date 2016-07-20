@@ -69,15 +69,14 @@ public class API {
         }, gson::toJson);
 
         post("/api/game/create", (request, response) -> {
-            JsonGame newGame = gson.fromJson(request.queryParams("data"), JsonGame.class);
             HashMap<String,Object> errorMessage = new HashMap<>();
-            double bet = newGame.getAmount();
-            String type = newGame.getGameType();
-            String nums = newGame.getNumbers();
+            double bet = Double.parseDouble(request.queryParams("bet"));
+            String type = request.queryParams("type");
+            String nums = request.queryParams("nums");
             User user = null;
 
             try {
-                user = userHandler.findUserByUsername(newGame.getUsername());
+                user = userHandler.findUserByUsername("lrojas");
             } catch (Exception e) {
                 e.printStackTrace();
                 errorMessage.put("error", "Error retrieving the user. The requested user doesn't exists in the database.");
