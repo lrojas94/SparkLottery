@@ -59,6 +59,7 @@
                     </div>
 
                 </div>
+                <input type="hidden" name="country" id="country">
                 <div class="row">
                     <div class="col-xs-12">
                         <button type="submit" class="btn btn-success btn-block">Jugar!</button>

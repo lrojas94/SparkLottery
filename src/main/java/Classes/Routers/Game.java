@@ -107,6 +107,7 @@ public class Game {
 
                 ticketHandler.insertIntoDatabase(ticket);
                 Transaction trans = Main.createTicketTransaction(ticket);
+                trans.setCountryCode(request.queryParams("country"));
                 user.getAccount().getTransactions().add(Main.createTicketTransaction(ticket));
                 transactionHandler.insertIntoDatabase(trans);
 
@@ -146,6 +147,7 @@ public class Game {
                         winningTrans.setAmmount(activeLoto.getWinnersAmmount());
                         winningTrans.setOwner(user.getAccount());
                         winningTrans.setDescription("Loto Ganado con apuesta de: " + ticket.getBetAmount());
+
                         transactionHandler.insertIntoDatabase(winningTrans);
                         user.getAccount().getTransactions().add(winningTrans);
                         request.session(true).attribute("user",user); //
@@ -190,6 +192,7 @@ public class Game {
                 int numa = Integer.parseInt(request.queryParams("numa"));
                 int numb = Integer.parseInt(request.queryParams("numb"));
                 int numc = Integer.parseInt(request.queryParams("numc"));
+                String countryCode = request.queryParams("country");
                 double bet = Double.parseDouble(request.queryParams("ammount"));
 
                 if(bet > user.getAccount().getBalance()){
@@ -211,6 +214,7 @@ public class Game {
                 ticket.setIssuedIn(activePale);
 
                 Transaction trans = Main.createTicketTransaction(ticket);
+                trans.setCountryCode(countryCode);
                 ticketHandler.insertIntoDatabase(ticket);
                 transactionHandler.insertIntoDatabase(trans);
 

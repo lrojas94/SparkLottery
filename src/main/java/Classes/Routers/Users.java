@@ -160,6 +160,7 @@ public class Users {
                 String msg = request.queryParams("msg");
                 User user = request.session().attribute("user");
                 User userTo = userHandler.findObjectWithId(transferTo);
+                String countryCode = request.queryParams("country");
                 String errors = "";
 
                 if(user.getUsername().equals(userTo.getUsername())){
@@ -182,7 +183,7 @@ public class Users {
                     transferFromTrans.setMessage(msg);
                     transferToTrans.setDescription("Transferido desde usuario: " + user + " | " + user.getUsername());
                     transferFromTrans.setDescription("Transferido a usuario: " + userTo + " | " + userTo.getUsername());
-
+                    transferFromTrans.setCountryCode(countryCode);
                     transferToTrans.setOwner(userTo.getAccount());
                     userTo.getAccount().getTransactions().add(transferToTrans);
 

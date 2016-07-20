@@ -47,6 +47,7 @@
                     <textarea name="msg" id="msg" class="form-control" rows="5"></textarea>
                 </div>
             </div>
+            <input type="hidden" name="country" id="country">
             <div class="col-xs-12">
                 <button type="submit" class="btn btn-success btn-block">Transferir</button>
             </div>
@@ -54,3 +55,6 @@
 
     </form>
 </div>
+<script type="text/javascript">
+    getLocation();
+</script>

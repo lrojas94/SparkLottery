@@ -67,6 +67,14 @@ public class Transaction {
         this.owner = owner;
     }
 
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
     public enum Method{
         USER,
         CREDITCARD,
@@ -88,7 +96,8 @@ public class Transaction {
     private Date issuedDate = new Date();
     @ManyToOne
     private Account owner;
-
+    @Column
+    private String countryCode;
     public Transaction() {
     }
 

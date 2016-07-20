@@ -37,9 +37,13 @@
                            pattern="((0*(?:[1-9][0-9]?))(,\s*(0*(?:[1-9][0-9]?))){19})" class="form-control" name="nums" id="nums" placeholder="1,2,3,..">
                 </div>
             </div>
+            <input type="hidden" name="country" id="country">
             <div class="col-xs-12">
                 <button type="submit" class="btn btn-success btn-block">Jugar!</button>
             </div>
         </form>
     </div>
 </div>
+<script type="text/javascript">
+    getLocation();
+</script>
