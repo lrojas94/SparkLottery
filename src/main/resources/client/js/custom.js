@@ -42,13 +42,15 @@ var SetupUserInfo = function() {
 }
 
 var UserLogin = function(userData) {
-  if(userData.username) {
+  if(userData && userData.username) {
     localStorage.setItem('user', JSON.stringify(userData));
     // Login was successful!!
     USER_INFO = userData;
     SetupUserInfo();
     SetupTransactions(true);
-
+  }
+  else {
+    swal('Lo Sentimos', 'Se ha producido un error intentando iniciar sesion. Porfavor, intente nuevamete revisando su usuario y contrasena. ', 'error');
   }
 }
 
@@ -67,7 +69,7 @@ var PlayPale = function() {
     method: 'post',
     data: data,
     success: function(data) {
-       Materialize.toast(data, 4000);
+      swal('Felicidades!', 'Usted ha ganado el PALE!', 'success');
     }
   })
 }

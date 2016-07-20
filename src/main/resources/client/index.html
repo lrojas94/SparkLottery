@@ -8,6 +8,7 @@
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="./css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+  <link href="./css/sweetalert.css" type="text/css" rel="stylesheet" media="screen,projection">
   <link href="./css/custom.min.css" type="text/css" rel="stylesheet" media="screen,projection">
 </head>
 <body>
@@ -93,22 +94,31 @@
          </table>
         </div>
 
-        <div id='loto-container'></div>
+        <div id='loto-container'>
+          <form id='loto-form'>
+            <p class='col s12'>A continuacion, ingrese 20 numeros para jugar al Loto</p>
+            <div class="input-field col s12">
+              <input placeholder="Separe los numeros por comas." id="atb" name='atb' type="number" class="validate" required>
+              <label for="atb">Numeros a Jugar</label>
+            </div>
+            <button class='btn waves-effect waves-light s12 right'> Jugar! </button>
+          </form>
+        </div>
         <div id='pale-container'>
           <form id='pale-form'>
             <div class="input-field col s12">
-              <input placeholder="" id="atb" name='atb' type="number" class="validate" required>
+              <input id="atb" name='atb' type="number" class="validate" required>
               <label for="atb">Monto a apostar</label>
             </div>
             <p class='col s12'>Numeros a jugar</p>
             <div class="input-field col s4">
-              <input id="numA" type="number" name='numA' class="validate" required>
+              <input id="numA" placeholder='Primer numero' type="number" name='numA' class="validate" required>
             </div>
             <div class="input-field col s4">
-              <input id="numB" type="number" name='numB' class="validate" required>
+              <input id="numB" placeholder='Segundo numero' type="number" name='numB' class="validate" required>
             </div>
             <div class="input-field col s4">
-              <input id="numC" type="number" name='numC' class="validate" required>
+              <input id="numC" placeholder='Tercer numero' type="number" name='numC' class="validate" required>
             </div>
             <button class='btn waves-effect waves-light s12 right'> Jugar! </button>
           </form>
@@ -141,6 +151,7 @@
   <!--  Scripts-->
   <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
   <script src="./js/materialize.js"></script>
+  <script src="./js/sweetalert.min.js"></script>
   <script src="./js/custom.js"></script>
   <!-- <script src="./js/init.js"></script> -->
 
