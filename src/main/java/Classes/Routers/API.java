@@ -4,7 +4,9 @@ package Classes.Routers;
 import static spark.Spark.*;
 
 import Classes.Data.*;
+import Classes.Data.Game;
 import Classes.Game.RandomGenerator;
+import Classes.HelperClasses.Utilities;
 import Classes.Main;
 import Classes.PersistenceHandlers.GameHandler;
 import Classes.PersistenceHandlers.TicketHandler;
@@ -13,9 +15,12 @@ import Classes.PersistenceHandlers.UserHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by MEUrena on 7/19/16.
@@ -96,7 +101,13 @@ public class API {
                         playStatus = playPale(nums, user, bet);
                         break;
                     case "LOTO":
-//                        playStatus = playLoto(nums, user, bet);
+                        Pattern regex = Pattern.compile("((0*(?:[1-9][0-9]?))(,\\s*(0*(?:[1-9][0-9]?))){19})");
+                        Matcher matcher = regex.matcher(nums);
+                        if (!matcher.matches()) {
+                            playStatus = "Se requiere insertar una cadena de 20 numeros separados por coma y menores a 100.";
+                        } else {
+                            playStatus = playLoto(nums, user, bet);
+                        }
                         break;
                     default:
                         break;
@@ -115,11 +126,12 @@ public class API {
         TicketHandler ticketHandler = TicketHandler.getInstance();
         TransactionHandler transactionHandler = TransactionHandler.getInstance();
         try {
-            Classes.Data.Game activePale = gameHandler.findActivePale();
+            Game activePale = gameHandler.findActivePale();
             Ticket ticket = new Ticket();
             ticket.setNumbers(ticketPlay);
             ticket.setBetAmount(bet);
             ticket.setOwner(user);
+            ticket.setEmitDate(new Date());
             ticket.setIssuedIn(activePale);
 
             Transaction trans = Main.createTicketTransaction(ticket);
@@ -129,11 +141,7 @@ public class API {
             //SIMULATE GAME:
             RandomGenerator gen = new RandomGenerator();
             int[] winningNumbers = gen.getNumbers(3);
-            String[] numsArray = ticketPlay.split(",");
-            int[] intArray = new int[numsArray.length];
-            for(int i = 0; i < numsArray.length; i++) {
-                intArray[i] = Integer.parseInt(numsArray[i]);
-            }
+            int[] intArray = Utilities.stringToIntArray(ticket.getNumbers());
 
             if(winningNumbers != null){
                 //We can work with this:
@@ -144,9 +152,9 @@ public class API {
                     activePale.setWinningTicket(ticket);
                     gameHandler.updateObject(activePale);
                     //create new Pale:
-                    Classes.Data.Game pale = new Classes.Data.Game();
+                    Game pale = new Game();
                     pale.setBaseAmmount(0);
-                    pale.setType(Classes.Data.Game.GameType.PALE);
+                    pale.setType(Game.GameType.PALE);
                     //save:
                     gameHandler.insertIntoDatabase(pale);
                     //Create winning trans:
@@ -173,8 +181,77 @@ public class API {
         return status;
     }
 
-//    private static String playLoto(String ticketPlay, User user, double bet) {
-//
-//    }
+    private static String playLoto(String ticketPlay, User user, double bet) {
+        String status;
+
+        GameHandler gameHandler = GameHandler.getInstance();
+        TicketHandler ticketHandler = TicketHandler.getInstance();
+        TransactionHandler transactionHandler = TransactionHandler.getInstance();
+        try {
+            Game activeLoto = gameHandler.findActiveLoto();
+            Ticket ticket = new Ticket();
+            ticket.setOwner(user);
+            ticket.setBetAmount(bet);
+            ticket.setIssuedIn(activeLoto);
+            ticket.setEmitDate(new Date());
+            ticket.setNumbers(ticketPlay);
+
+            ticketHandler.insertIntoDatabase(ticket);
+            Transaction trans = Main.createTicketTransaction(ticket);
+            user.getAccount().getTransactions().add(Main.createTicketTransaction(ticket));
+            transactionHandler.insertIntoDatabase(trans);
+
+            //SIMULATE GAME:
+            RandomGenerator gen = new RandomGenerator();
+            int[] winningNumbers = gen.getNumbers(5);
+
+            if(winningNumbers != null) {
+                //We can work with this:
+                boolean isWinner = true;
+                int[] ticketNums = Utilities.stringToIntArray(ticket.getNumbers());
+                for (int n : winningNumbers) {
+                    boolean exist = false;
+                    for (int t : ticketNums) {
+                        if (n == t) {
+                            exist = true;
+                        }
+                    }
+                    if (!exist) {
+                        isWinner = false;
+                        break;
+                    }
+                }
+
+                if (isWinner || (ticketNums[0] + ticketNums[19] == 100)) {
+                    activeLoto.setWinningTicket(ticket);
+                    gameHandler.updateObject(activeLoto);
+                    //create new Pale:
+                    Game loto = new Game();
+                    loto.setBaseAmmount(1000000);
+                    loto.setType(Game.GameType.LOTO);
+                    //save:
+                    gameHandler.insertIntoDatabase(loto);
+                    //Create winning trans:
+                    Transaction winningTrans = new Transaction();
+                    winningTrans.setMethod(Transaction.Method.WINNER);
+                    winningTrans.setAmmount(activeLoto.getWinnersAmmount());
+                    winningTrans.setOwner(user.getAccount());
+                    winningTrans.setDescription("Loto Ganado con apuesta de: " + ticket.getBetAmount());
+                    transactionHandler.insertIntoDatabase(winningTrans);
+                    user.getAccount().getTransactions().add(winningTrans);
+                    status = "Win";
+                } else {
+                    status = "Lose";
+                }
+            } else {
+                status = "Error retrieving random numbers from the API.";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            status = "There was an error with the request. Check your numbers.";
+
+        }
+        return status;
+    }
 
 }
