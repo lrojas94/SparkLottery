@@ -52,6 +52,26 @@ var UserLogin = function(userData) {
   }
 }
 
+var PlayPale = function() {
+  var data = {
+    type: 'PALE',
+    username: USER_INFO.username,
+    nums : $('#numA').val() + ',' + $('#numB').val() + ',' + $('#numC').val(),
+    bet: $('#atb').val()
+  };
+
+
+  $.ajax({
+    url: REST_HOST + 'game/create',
+    dataType: 'json',
+    method: 'post',
+    data: data,
+    success: function(data) {
+       Materialize.toast(data, 4000);
+    }
+  })
+}
+
 $(function() {
   if(localStorage.user){
     USER_INFO = JSON.parse(localStorage.user);
@@ -69,7 +89,6 @@ $(function() {
   });
 
   $('#login-form').submit(function(e) {
-
     e.preventDefault();
 
     $.ajax({
@@ -87,5 +106,10 @@ $(function() {
       }
     });
   });
+
+  $('#pale-form').submit(function(e) {
+    e.preventDefault();
+    PlayPale();
+  })
 
 });
