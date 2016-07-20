@@ -16,6 +16,9 @@ import Classes.Routers.*;
 import Classes.PersistenceHandlers.WinnerHandler;
 import com.cloudinary.utils.ObjectUtils;
 import spark.ModelAndView;
+import spark.Request;
+import spark.Response;
+import spark.Spark;
 import spark.template.freemarker.FreeMarkerEngine;
 import com.cloudinary.*;
 
@@ -23,12 +26,34 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Filter;
 
 public class Main {
     public final static String MODEL_PARAM = "model";
     public static final String BASE_LAYOUT = "header_footer_layout.ftl";
     public static File uploadDir = new File("./src/main/resources/public/uploads");
     public static Cloudinary cloudinary = null;
+
+    private static final HashMap<String, String> corsHeaders = new HashMap<String, String>();
+
+    static {
+        corsHeaders.put("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+        corsHeaders.put("Access-Control-Allow-Origin", "*");
+        corsHeaders.put("Access-Control-Allow-Headers", "Content-Type,Authorization,X-Requested-With,Content-Length,Accept,Origin,");
+        corsHeaders.put("Access-Control-Allow-Credentials", "true");
+    }
+
+    public final static void apply() {
+        spark.Filter filter = new spark.Filter() {
+            @Override
+            public void handle(Request request, Response response) throws Exception {
+                corsHeaders.forEach((key, value) -> {
+                    response.header(key, value);
+                });
+            }
+        };
+        Spark.after(filter);
+    }
 
 
     public static Transaction createTicketTransaction(Ticket ticket){
@@ -42,11 +67,11 @@ public class Main {
     }
 
     public static void main(String[] args) {
-
         setupCloudinary();
 
         staticFiles.location("/public");
         staticFiles.externalLocation("uploads");
+        apply();
 
         enableDebugScreen();
 
