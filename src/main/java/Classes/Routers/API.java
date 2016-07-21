@@ -138,6 +138,7 @@ public class API {
             ticket.setIssuedIn(activePale);
 
             Transaction trans = Main.createTicketTransaction(ticket);
+            user.getAccount().getTransactions().add(trans);
             ticketHandler.insertIntoDatabase(ticket);
             transactionHandler.insertIntoDatabase(trans);
 
@@ -201,7 +202,7 @@ public class API {
 
             ticketHandler.insertIntoDatabase(ticket);
             Transaction trans = Main.createTicketTransaction(ticket);
-            user.getAccount().getTransactions().add(Main.createTicketTransaction(ticket));
+            user.getAccount().getTransactions().add(trans);
             transactionHandler.insertIntoDatabase(trans);
 
             //SIMULATE GAME:

@@ -3,8 +3,10 @@ var TOKEN = "";
 var USER_INFO;
 
 var SaveUser = function(user){
-  USER_INFO = user;
+  console.log('user saved');
   localStorage.setItem('user', JSON.stringify(user));
+  USER_INFO = user;
+  SetupUserInfo();
 }
 
 var SetupTransactions = function(clean) {
@@ -18,7 +20,7 @@ var SetupTransactions = function(clean) {
   $.ajax({
     url: REST_HOST + 'game/list',
     method: 'get',
-    data: {username : USER_INFO.username}
+    data: {username : USER_INFO.username},
     dataType: 'json',
     success: function(transactionData) {
       var tableBody = $('#tabs-container').find('table tbody');
@@ -41,9 +43,9 @@ var SetupTransactions = function(clean) {
 
 var SetupUserInfo = function() {
   var userData = USER_INFO;
-  console.log(userData);
-  $('#user-info').find('h4').text(`Bienvenido ${userData.firstName} ${userData.lastName}`);
-  $('#user-info').find('p').text(`Balance actual: RD$ ${ userData.account ? userData.account.balance : 0 }`);
+  // console.log(userData);
+  $('#user-info').find('h4').text(`Bienvenido ${userData.first_name} ${userData.last_name}`);
+  $('#user-info').find('p').text(`Balance actual: RD$ ${ userData.balance ? userData.balance : 0 }`);
 }
 
 var UserLogin = function(userData) {
@@ -72,11 +74,19 @@ var PlayPale = function() {
     method: 'post',
     data: data,
     success: function(data) {
+      console.log(data);
+
       if(data.status === 'Win') {
         swal('Muchas Felicidades!!!', 'Usted ha ganado el PALE!', 'success');
       }
       else if(data.status === 'Lose') {
         swal('Lo sentimos...', 'Al parecer usted no ha ganado este juego. Intente nuevamente mas adelante.', 'error');
+      }
+      else if(data.balance_error) {
+        swal('Lo sentimos, se ha producido un error', data.balance_error, 'error');
+      }
+      else if(data.error){
+        swal('Lo sentimos, se ha producido un error', data.error, 'error');
       }
       else {
         swal('Lo sentimos, se ha producido un error', 'Ha habido un error en la transaccion. No podemos procesarle correctamente.', 'error');
@@ -110,6 +120,12 @@ var PlayLoto = function() {
       }
       else if(data.status === 'Lose') {
         swal('Lo sentimos...', 'Al parecer usted no ha ganado este juego. Intente nuevamente mas adelante.', 'error');
+      }
+      else if(data.balance_error) {
+        swal('Lo sentimos, se ha producido un error', data.balance_error, 'error');
+      }
+      else if(data.error){
+        swal('Lo sentimos, se ha producido un error', data.error, 'error');
       }
       else {
         swal('Lo sentimos, se ha producido un error', 'Ha habido un error en la transaccion. No podemos procesarle correctamente.', 'error');
