@@ -15,10 +15,7 @@ import Classes.PersistenceHandlers.UserHandler;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +27,7 @@ public class API {
 
     public static void Routes() {
         GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(User.class, new UserSerializer());
         Gson gson = gsonBuilder.excludeFieldsWithoutExposeAnnotation().create();
 
         UserHandler userHandler = UserHandler.getInstance();
@@ -58,7 +56,7 @@ public class API {
             HashMap<String,Object> errorMessage = new HashMap<>();
             User user = null;
             try {
-                user = userHandler.findUserByUsername("lrojas");
+                user = userHandler.findUserByUsername(request.queryParams("username"));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -75,13 +73,17 @@ public class API {
 
         post("/api/game/create", (request, response) -> {
             HashMap<String,Object> errorMessage = new HashMap<>();
-            double bet = Double.parseDouble(request.queryParams("bet"));
+            String betString = request.queryParams("bet");
+            double bet = 0.0;
+            if (betString != null) {
+                bet = Double.parseDouble(betString);
+            }
             String type = request.queryParams("type");
             String nums = request.queryParams("nums");
             User user = null;
 
             try {
-                user = userHandler.findUserByUsername("lrojas");
+                user = userHandler.findUserByUsername(request.queryParams("username"));
             } catch (Exception e) {
                 e.printStackTrace();
                 errorMessage.put("error", "Error retrieving the user. The requested user doesn't exists in the database.");
@@ -95,7 +97,7 @@ public class API {
                 errorMessage.put("balance_error", "No puede apostar mas de lo que tiene en su cuenta.");
                 return errorMessage;
             } else {
-                String playStatus = null;
+                Map<String, Object> playStatus = new HashMap<>();
                 switch (type) {
                     case "PALE":
                         playStatus = playPale(nums, user, bet);
@@ -104,14 +106,15 @@ public class API {
                         Pattern regex = Pattern.compile("((0*(?:[1-9][0-9]?))(,\\s*(0*(?:[1-9][0-9]?))){19})");
                         Matcher matcher = regex.matcher(nums);
                         if (!matcher.matches()) {
-                            playStatus = "Se requiere insertar una cadena de 20 numeros separados por coma y menores a 100.";
+                            playStatus.put("error", "Se requiere insertar una cadena de 20 numeros separados por coma y menores a 100.");
                         } else {
-                            playStatus = playLoto(nums, user, bet);
+                            playStatus = playLoto(nums, user);
                         }
                         break;
                     default:
                         break;
                 }
+                playStatus.put("user", user);
                 return playStatus;
             }
 
@@ -119,8 +122,8 @@ public class API {
         }, gson::toJson);
     }
 
-    private static String playPale(String ticketPlay, User user, double bet) {
-        String status;
+    private static Map<String, Object> playPale(String ticketPlay, User user, double bet) {
+        Map<String, Object> status = new HashMap<>();
 
         GameHandler gameHandler = GameHandler.getInstance();
         TicketHandler ticketHandler = TicketHandler.getInstance();
@@ -143,7 +146,7 @@ public class API {
             int[] winningNumbers = gen.getNumbers(3);
             int[] intArray = Utilities.stringToIntArray(ticket.getNumbers());
 
-            if(winningNumbers != null){
+            if (winningNumbers != null) {
                 //We can work with this:
                 if ((winningNumbers[0] == intArray[0] &&
                         winningNumbers[1] == intArray[1] &&
@@ -165,24 +168,24 @@ public class API {
                     winningTrans.setDescription("Pale Ganado con apuesta de: " + ticket.getBetAmount());
                     transactionHandler.insertIntoDatabase(winningTrans);
                     user.getAccount().getTransactions().add(winningTrans);
-                    status = "Win";
+                    status.put("status", "Win");
                 } else {
-                    status = "Lose";
+                    status.put("status", "Lose");
                 }
             } else {
-                status = "Error retrieving random numbers from the API.";
+                status.put("error", "Error retrieving random numbers from the API.");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            status = "There was an error with the request. Check your numbers.";
+            status.put("error", "There was an error with the request. Check your numbers.");
         }
 
         return status;
     }
 
-    private static String playLoto(String ticketPlay, User user, double bet) {
-        String status;
+    private static Map<String, Object> playLoto(String ticketPlay, User user) {
+        Map<String, Object> status = new HashMap<>();
 
         GameHandler gameHandler = GameHandler.getInstance();
         TicketHandler ticketHandler = TicketHandler.getInstance();
@@ -191,7 +194,7 @@ public class API {
             Game activeLoto = gameHandler.findActiveLoto();
             Ticket ticket = new Ticket();
             ticket.setOwner(user);
-            ticket.setBetAmount(bet);
+            ticket.setBetAmount(50.00);
             ticket.setIssuedIn(activeLoto);
             ticket.setEmitDate(new Date());
             ticket.setNumbers(ticketPlay);
@@ -205,7 +208,7 @@ public class API {
             RandomGenerator gen = new RandomGenerator();
             int[] winningNumbers = gen.getNumbers(5);
 
-            if(winningNumbers != null) {
+            if (winningNumbers != null) {
                 //We can work with this:
                 boolean isWinner = true;
                 int[] ticketNums = Utilities.stringToIntArray(ticket.getNumbers());
@@ -239,16 +242,16 @@ public class API {
                     winningTrans.setDescription("Loto Ganado con apuesta de: " + ticket.getBetAmount());
                     transactionHandler.insertIntoDatabase(winningTrans);
                     user.getAccount().getTransactions().add(winningTrans);
-                    status = "Win";
+                    status.put("status", "Win");
                 } else {
-                    status = "Lose";
+                    status.put("status", "Lose");
                 }
             } else {
-                status = "Error retrieving random numbers from the API.";
+                status.put("error", "Error retrieving random numbers from the API.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            status = "There was an error with the request. Check your numbers.";
+            status.put("error", "There was an error with the request. Check your numbers.");
 
         }
         return status;
