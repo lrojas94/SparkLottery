@@ -23,7 +23,10 @@ var SetupTransactions = function(clean) {
     data: {username : USER_INFO.username},
     dataType: 'json',
     success: function(data) {
-      console.log(data);
+      if(data.errors || data.error || !data.user) {
+        swal('Lo Sentimos', 'Se ha producido un error. ', 'error');
+        return;
+      }
       SaveUser(data.user);
       var transactionData = data.tickets;
       var tableBody = $('#tabs-container').find('table tbody');
