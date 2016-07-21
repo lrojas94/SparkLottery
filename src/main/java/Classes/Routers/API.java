@@ -53,7 +53,7 @@ public class API {
         }, gson::toJson);
 
         get("/api/game/list", (request, response) -> {
-            HashMap<String,Object> errorMessage = new HashMap<>();
+            HashMap<String,Object> res = new HashMap<>();
             User user = null;
             try {
                 user = userHandler.findUserByUsername(request.queryParams("username"));
@@ -62,11 +62,14 @@ public class API {
             }
 
             if (user == null) {
-                errorMessage.put("error", "Error retrieving the user. The requested user doesn't exists in the database.");
-                return errorMessage;
+                res.put("error", "Error retrieving the user. The requested user doesn't exists in the database.");
+                return res;
             } else {
-                Set<Ticket> ticketList = user.getTickets();
-                return ticketList;
+                res.put("user",user);
+                res.put("tickets", user.getTickets());
+//                Set<Ticket> ticketList = user.getTickets();
+
+                return res;
             }
 
         }, gson::toJson);

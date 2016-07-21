@@ -22,7 +22,10 @@ var SetupTransactions = function(clean) {
     method: 'get',
     data: {username : USER_INFO.username},
     dataType: 'json',
-    success: function(transactionData) {
+    success: function(data) {
+      console.log(data);
+      SaveUser(data.user);
+      var transactionData = data.tickets;
       var tableBody = $('#tabs-container').find('table tbody');
       $(tableBody).html('');
       for(trans of transactionData) {
