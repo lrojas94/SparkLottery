@@ -2,6 +2,11 @@ var REST_HOST = 'http://localhost:4567/api/';
 var TOKEN = "";
 var USER_INFO;
 
+var SaveUser = function(user){
+  USER_INFO = user;
+  localStorage.setItem('user', JSON.stringify(user));
+}
+
 var SetupTransactions = function(clean) {
   clean = clean || false;
 
@@ -13,8 +18,8 @@ var SetupTransactions = function(clean) {
   $.ajax({
     url: REST_HOST + 'game/list',
     method: 'get',
+    data: {username : USER_INFO.username}
     dataType: 'json',
-    data: { username : 'data' },
     success: function(transactionData) {
       var tableBody = $('#tabs-container').find('table tbody');
       $(tableBody).html('');
@@ -43,9 +48,7 @@ var SetupUserInfo = function() {
 
 var UserLogin = function(userData) {
   if(userData && userData.username) {
-    localStorage.setItem('user', JSON.stringify(userData));
-    // Login was successful!!
-    USER_INFO = userData;
+    SaveUser(userData);
     SetupUserInfo();
     SetupTransactions(true);
   }
@@ -69,10 +72,58 @@ var PlayPale = function() {
     method: 'post',
     data: data,
     success: function(data) {
-      swal('Felicidades!', 'Usted ha ganado el PALE!', 'success');
+      if(data.status === 'Win') {
+        swal('Muchas Felicidades!!!', 'Usted ha ganado el PALE!', 'success');
+      }
+      else if(data.status === 'Lose') {
+        swal('Lo sentimos...', 'Al parecer usted no ha ganado este juego. Intente nuevamente mas adelante.', 'error');
+      }
+      else {
+        swal('Lo sentimos, se ha producido un error', 'Ha habido un error en la transaccion. No podemos procesarle correctamente.', 'error');
+      }
+      if(data.user){
+        SaveUser(data.user);
+      }
+      //clear inputs:
+      $('#pale-form input').val('');
     }
-  })
+  });
 }
+
+var PlayLoto = function() {
+  var data = {
+    type: 'LOTO',
+    username: USER_INFO.username,
+    nums : $('#loto-nums').val(),
+    bet: 50 //static xD
+  };
+
+
+  $.ajax({
+    url: REST_HOST + 'game/create',
+    dataType: 'json',
+    method: 'post',
+    data: data,
+    success: function(data) {
+      if(data.status === 'Win') {
+        swal('Muchas Felicidades!!!', 'Usted ha ganado el LOTO!', 'success');
+      }
+      else if(data.status === 'Lose') {
+        swal('Lo sentimos...', 'Al parecer usted no ha ganado este juego. Intente nuevamente mas adelante.', 'error');
+      }
+      else {
+        swal('Lo sentimos, se ha producido un error', 'Ha habido un error en la transaccion. No podemos procesarle correctamente.', 'error');
+      }
+
+      if(data.user){
+        SaveUser(data.user);
+      }
+      //clear inputs:
+      $('#loto-form input').val('');
+    }
+  });
+}
+
 
 $(function() {
   if(localStorage.user){
@@ -99,7 +150,6 @@ $(function() {
       method: 'post',
       dataType: 'json',
       success: function(userData){
-        console.log(userData);
         UserLogin(userData);
       },
       error: function(e) {
@@ -112,6 +162,10 @@ $(function() {
   $('#pale-form').submit(function(e) {
     e.preventDefault();
     PlayPale();
-  })
+  });
 
+  $('#loto-form').submit(function(e) {
+    e.preventDefault();
+    PlayLoto();
+  });
 });
